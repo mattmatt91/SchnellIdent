@@ -70,3 +70,15 @@ def list_measurement_ids():
 
 if __name__ == "__main__":
     create_database('db/measurement_data.db')
+
+
+
+"""data1 = pd.DataFrame({'IR': [0.5, 0.6, 0.7], 'MIC': [50.0, 60.0, 70.0]},
+                        index=pd.to_datetime(['2023-01-01', '2023-01-02', '2023-01-03']))
+    info1 = {'Location': 'Sensor A', 'MeasurementType': 'Type 1'}
+    add_dataset(database_name, 1, data1, info1)
+
+    data2 = pd.DataFrame({'IR': [0.8, 0.9], 'MIC': [80.0, 90.0]},
+                        index=pd.to_datetime(['2023-01-04', '2023-01-05']))
+    info2 = {'Location': 'Sensor B', 'MeasurementType': 'Type 2'}
+    add_dataset(database_name, 2, data2, info2)"""
