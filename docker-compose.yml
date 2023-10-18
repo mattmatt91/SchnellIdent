@@ -1,0 +1,15 @@
+version: '1'
+services:
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - hardware
+
+  hardware:
+    build:
+      context: ./hardware
+    ports:
+      - "3010:3010"
