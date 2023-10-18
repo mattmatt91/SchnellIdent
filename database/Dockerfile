@@ -1,4 +1,4 @@
-FROM python:3.9-slim
+FROM tiangolo/uvicorn-gunicorn-fastapi:python3.9
 
 WORKDIR /app
 
@@ -6,8 +6,10 @@ COPY . /app
 
 RUN pip install --no-cache-dir --upgrade -r requirements.txt
 
-EXPOSE 3000
+EXPOSE 3040
 
-ENV NAME backend
+ENV NAME database
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "3000", "--reload"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "3040"]
+
+

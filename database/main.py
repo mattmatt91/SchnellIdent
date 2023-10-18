@@ -1,52 +1,72 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
+from pydantic import BaseModel
 import sqlite3
 import pandas as pd
-from pydantic import BaseModel
+import io
 
 app = FastAPI()
 
-# Create a SQLite database connection and cursor
-conn = sqlite3.connect("data.db")
-cursor = conn.cursor()
+# Create a database and a measurements table
+def create_database(database_name):
+    conn = sqlite3.connect(database_name)
+    cursor = conn.cursor()
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS measurements (
+        id INTEGER PRIMARY KEY,
+        data TEXT,
+        info TEXT
+    )''')
+    conn.commit()
+    conn.close()
 
-# Create a table to store dataframes
-cursor.execute(
-    """CREATE TABLE IF NOT EXISTS dataframes (id TEXT PRIMARY KEY, dataframe BLOB)"""
-)
-conn.commit()
+# Add a dataset to the database
+@app.post("/add_dataset/{measurement_id}")
+def add_dataset(measurement_id: int, data: pd.DataFrame, info: dict):
+    database_name = 'db/measurement_data.db'
+    conn = sqlite3.connect(database_name)
+    cursor = conn.cursor()
+    
+    data_json = data.to_json()
+    
+    cursor.execute('INSERT INTO measurements (id, data, info) VALUES (?, ?, ?)',
+                   (measurement_id, data_json, str(info))
+    )
+    
+    conn.commit()
+    conn.close()
+    return {"message": "Dataset added successfully"}
 
-class DataframeCreate(BaseModel):
-    id: str
-    dataframe: pd.DataFrame
+# Retrieve data for a specific measurement ID
+@app.get("/get_measurement_data/{measurement_id}")
+def get_measurement_data(measurement_id: int):
+    database_name = 'db/measurement_data.db'
+    conn = sqlite3.connect(database_name)
+    cursor = conn.cursor()
 
-class DataframeResponse(BaseModel):
-    id: str
+    cursor.execute('SELECT data, info FROM measurements WHERE id = ?', (measurement_id,))
+    data, info = cursor.fetchone()
 
-@app.post("/store_dataframe", response_model=DataframeResponse)
-async def store_dataframe(dataframe_create: DataframeCreate):
-    try:
-        # Serialize the dataframe to bytes for storage in SQLite
-        dataframe_bytes = dataframe_create.dataframe.to_pickle()
-        
-        # Store the dataframe in the database
-        cursor.execute("INSERT INTO dataframes (id, dataframe) VALUES (?, ?)", (dataframe_create.id, dataframe_bytes))
-        conn.commit()
-        
-        return {"id": dataframe_create.id}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error storing dataframe: {e}")
+    conn.close()
 
-@app.get("/retrieve_dataframe/{dataframe_id}", response_model=pd.DataFrame)
-async def retrieve_dataframe(dataframe_id: str):
-    try:
-        # Retrieve the serialized dataframe from the database
-        cursor.execute("SELECT dataframe FROM dataframes WHERE id = ?", (dataframe_id,))
-        result = cursor.fetchone()
-        if result is not None:
-            dataframe_bytes = result[0]
-            df = pd.read_pickle(dataframe_bytes)
-            return df
-        else:
-            raise HTTPException(status_code=404, detail="Dataframe not found")
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error retrieving dataframe: {e}")
+    if data:
+        data = pd.read_json(io.StringIO(data))
+        return {"data": data.to_dict(), "info": info}
+    else:
+        return {"message": "Measurement not found"}
+
+# List all stored measurement IDs
+@app.get("/list_measurement_ids")
+def list_measurement_ids():
+    database_name = 'db/measurement_data.db'
+    conn = sqlite3.connect(database_name)
+    cursor = conn.cursor()
+
+    cursor.execute('SELECT DISTINCT id FROM measurements')
+    measurement_ids = cursor.fetchall()
+
+    conn.close()
+
+    return {"measurement_ids": [id[0] for id in measurement_ids]}
+
+if __name__ == "__main__":
+    create_database('db/measurement_data.db')

@@ -13,3 +13,11 @@ services:
       context: ./hardware
     ports:
       - "3010:3010"
+
+  fastapi-app:
+    build:
+      context: ./database
+    ports:
+      - "3040:3040"
+    volumes:
+      - ./data:/app/data
