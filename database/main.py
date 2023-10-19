@@ -1,84 +1,82 @@
-from fastapi import FastAPI
-from pydantic import BaseModel
+from fastapi import FastAPI, HTTPException
 import sqlite3
-import pandas as pd
-import io
+import json
 
 app = FastAPI()
 
-# Create a database and a measurements table
+# Create a SQLite database and a "datasets" table
 def create_database(database_name):
     conn = sqlite3.connect(database_name)
     cursor = conn.cursor()
     cursor.execute('''
-    CREATE TABLE IF NOT EXISTS measurements (
-        id INTEGER PRIMARY KEY,
+    CREATE TABLE IF NOT EXISTS datasets (
+        id TEXT PRIMARY KEY,
         data TEXT,
         info TEXT
     )''')
     conn.commit()
     conn.close()
 
-# Add a dataset to the database
-@app.post("/add_dataset/{measurement_id}")
-def add_dataset(measurement_id: int, data: pd.DataFrame, info: dict):
-    database_name = 'db/measurement_data.db'
+# Add a new dataset to the database
+def add_dataset(database_name, dataset_id, data, info):
     conn = sqlite3.connect(database_name)
     cursor = conn.cursor()
-    
-    data_json = data.to_json()
-    
-    cursor.execute('INSERT INTO measurements (id, data, info) VALUES (?, ?, ?)',
-                   (measurement_id, data_json, str(info))
-    )
+
+    # Convert data and info dictionaries to JSON strings
+    data_json = json.dumps(data)
+    info_json = json.dumps(info)
+
+    cursor.execute('INSERT INTO datasets (id, data, info) VALUES (?, ?, ?)',
+                   (dataset_id, data_json, info_json))
     
     conn.commit()
     conn.close()
+
+# Read a dataset by ID
+def read_dataset(database_name, dataset_id):
+    conn = sqlite3.connect(database_name)
+    cursor = conn.cursor()
+
+    cursor.execute('SELECT data, info FROM datasets WHERE id = ?', (dataset_id,))
+    result = cursor.fetchone()
+
+    conn.close()
+
+    if result:
+        data, info = result
+        return {"data": json.loads(data), "info": json.loads(info)}
+    else:
+        return None
+
+# List all dataset IDs
+def list_dataset_ids(database_name):
+    conn = sqlite3.connect(database_name)
+    cursor = conn.cursor()
+
+    cursor.execute('SELECT id FROM datasets')
+    dataset_ids = [row[0] for row in cursor.fetchall()]
+
+    conn.close()
+
+    return dataset_ids
+
+database_name = '/app/data/dataset_db.db'
+create_database(database_name)
+
+@app.post("/add_dataset/{dataset_id}")
+def add_dataset_route(dataset_id: str, data: dict, info: dict):
+    add_dataset(database_name, dataset_id, data, info)
     return {"message": "Dataset added successfully"}
 
-# Retrieve data for a specific measurement ID
-@app.get("/get_measurement_data/{measurement_id}")
-def get_measurement_data(measurement_id: int):
-    database_name = 'db/measurement_data.db'
-    conn = sqlite3.connect(database_name)
-    cursor = conn.cursor()
-
-    cursor.execute('SELECT data, info FROM measurements WHERE id = ?', (measurement_id,))
-    data, info = cursor.fetchone()
-
-    conn.close()
-
-    if data:
-        data = pd.read_json(io.StringIO(data))
-        return {"data": data.to_dict(), "info": info}
+@app.get("/get_dataset/{dataset_id}")
+def get_dataset_route(dataset_id: str):
+    dataset = read_dataset(database_name, dataset_id)
+    if dataset:
+        return dataset
     else:
-        return {"message": "Measurement not found"}
+        raise HTTPException(status_code=404, detail="Dataset not found")
 
-# List all stored measurement IDs
-@app.get("/list_measurement_ids")
-def list_measurement_ids():
-    database_name = 'db/measurement_data.db'
-    conn = sqlite3.connect(database_name)
-    cursor = conn.cursor()
-
-    cursor.execute('SELECT DISTINCT id FROM measurements')
-    measurement_ids = cursor.fetchall()
-
-    conn.close()
-
-    return {"measurement_ids": [id[0] for id in measurement_ids]}
-
-if __name__ == "__main__":
-    create_database('db/measurement_data.db')
-
-
-
-"""data1 = pd.DataFrame({'IR': [0.5, 0.6, 0.7], 'MIC': [50.0, 60.0, 70.0]},
-                        index=pd.to_datetime(['2023-01-01', '2023-01-02', '2023-01-03']))
-    info1 = {'Location': 'Sensor A', 'MeasurementType': 'Type 1'}
-    add_dataset(database_name, 1, data1, info1)
-
-    data2 = pd.DataFrame({'IR': [0.8, 0.9], 'MIC': [80.0, 90.0]},
-                        index=pd.to_datetime(['2023-01-04', '2023-01-05']))
-    info2 = {'Location': 'Sensor B', 'MeasurementType': 'Type 2'}
-    add_dataset(database_name, 2, data2, info2)"""
+@app.get("/list_datasets")
+def list_datasets_route():
+    dataset_ids = list_dataset_ids(database_name)
+    return {"dataset_ids": dataset_ids}

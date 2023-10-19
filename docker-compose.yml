@@ -1,4 +1,4 @@
-version: '1'
+version: "1"
 services:
   backend:
     build:
@@ -14,7 +14,7 @@ services:
     ports:
       - "3010:3010"
 
-  fastapi-app:
+  database:
     build:
       context: ./database
     ports:
