@@ -4,7 +4,7 @@ import requests
 base_url = "http://localhost:80"  # Update this URL as needed
 
 # Test adding a new dataset
-dataset_id = "unique_id_1"
+dataset_id = "unique_id_2"
 data = {"key1": "value1", "key2": "value2"}
 info = {"location": "Sensor A", "measurement_type": "Type 1"}
 response = requests.post(f"{base_url}/add_dataset/{dataset_id}", json={"data": data, "info": info})

@@ -60,7 +60,8 @@ def list_dataset_ids(database_name):
 
     return dataset_ids
 
-database_name = '/app/data/dataset_db.db'
+database_name = 'test_dataset_db.db'
+# database_name = '/app/data/dataset_db.db'
 create_database(database_name)
 
 @app.post("/add_dataset/{dataset_id}")
