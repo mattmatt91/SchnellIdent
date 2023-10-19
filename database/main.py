@@ -31,7 +31,7 @@ def add_dataset(database_name, dataset_id, data, info):
     
     conn.commit()
     conn.close()
-
+    print("created database")
 # Read a dataset by ID
 def read_dataset(database_name, dataset_id):
     conn = sqlite3.connect(database_name)
@@ -62,7 +62,13 @@ def list_dataset_ids(database_name):
 
 database_name = 'test_dataset_db.db'
 # database_name = '/app/data/dataset_db.db'
-create_database(database_name)
+
+@app.on_event("startup")
+def create_if_not_exists():
+    create_database(database_name)
+
+
+
 
 @app.post("/add_dataset/{dataset_id}")
 def add_dataset_route(dataset_id: str, data: dict, info: dict):
