@@ -6,7 +6,7 @@ function MeasurementButton() {
   const startMeasurement = async () => {
     // Send a request to your backend endpoint
     try {
-      const response = await fetch('http://backend/measurement');
+      const response = await fetch('http://backend:4000/measurement');
       const data = await response.json();
       setMeasurementId(data);
     } catch (error) {
