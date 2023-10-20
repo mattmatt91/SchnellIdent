@@ -60,23 +60,27 @@ def list_dataset_ids(database_name):
 
     return dataset_ids
 
-database_name = 'test_dataset_db.db'
-# database_name = '/app/data/dataset_db.db'
+# database_name = 'test_dataset_db.db'
+database_name = 'data/dataset_db.db'
 
 @app.on_event("startup")
 def create_if_not_exists():
     create_database(database_name)
 
 
-
+@app.get("/test")
+def list_datasets_route():
+    return {"dataset_ids": 123}
 
 @app.post("/add_dataset/{dataset_id}")
 def add_dataset_route(dataset_id: str, data: dict, info: dict):
     add_dataset(database_name, dataset_id, data, info)
+    print("added dataset ")
     return {"message": "Dataset added successfully"}
 
 @app.get("/get_dataset/{dataset_id}")
-def get_dataset_route(dataset_id: str):
+def get_dataset_route(dataset_id:str):# dataset_id: str):
+    print("test")
     dataset = read_dataset(database_name, dataset_id)
     if dataset:
         return dataset

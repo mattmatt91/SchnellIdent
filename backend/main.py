@@ -1,10 +1,17 @@
 from fastapi import FastAPI
 import requests
 import uuid
-
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],  # Add your React app's URL here
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
 def read_root():
@@ -19,20 +26,21 @@ async def measure_data():
     url = 'http://hardware:3010/start'
     data = requests.post(url=url, json=params).json()
 
-    url = "http://database:3040"
-    response = requests.post(
-        f"{url}/add_dataset/{id}", json={"data": data, "info": params})
-    # print("Add Dataset Response:", response.status_code)
+    url = f"http://database:3040/add_dataset/{id}"
+    print(url)
+    response = requests.post(url, json={"data": data, "info": params})
+    print(response)
+    print("Add Dataset Response:", response.status_code)
     return id
 
 
-@app.get("/get_data")
+@app.get("/get_dataset/{id}")
 async def get_data(id: str):
-    url = "http://database:3040"
-    response = requests.get(f"{url}/get_dataset/{id}")
+    url = f"http://database:3040/get_dataset/{id}"
+    response = requests.get(url)
     print("Get Dataset Response:", response.status_code)
     if response.status_code == 200:
-        print("Dataset:", response.json())
+        # print("Dataset:", response.json())
         return response.json()
 
 
@@ -43,3 +51,4 @@ async def get_get_all_measurements():
     print("List Datasets Response:", response.status_code)
     if response.status_code == 200:
         print("Dataset IDs:", response.json()["dataset_ids"])
+        return response.json()

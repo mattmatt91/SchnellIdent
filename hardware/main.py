@@ -6,6 +6,8 @@ import pandas as pd
 from time import sleep
 import threading
 
+# from read_data import read_data
+
 class MeasurementData(BaseModel):
     duration: int
     rate: int
@@ -40,8 +42,8 @@ def toggle_heater(power:int, duration:int):
 def generate_random_data(rate:int, duration:int):
     num_data_points = int(rate *duration)
     time_intervals = [timedelta(seconds=i)/rate for i in range(num_data_points)]
-    ir_data = [random.uniform(0, 1) for _ in range(num_data_points)]
-    mic_data = [random.uniform(0, 1) for _ in range(num_data_points)]
+    ir_data = [round(random.uniform(0, 1),2) for _ in range(num_data_points)]
+    mic_data = [round(random.uniform(0, 1),2) for _ in range(num_data_points)]
     data = {
         "Time": time_intervals,
         "IR": ir_data,

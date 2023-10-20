@@ -4,7 +4,7 @@ services:
     build:
       context: ./backend
     ports:
-      - "3000:3000"
+      - "4000:4000"
     depends_on:
       - hardware
 
@@ -21,3 +21,12 @@ services:
       - "3040:3040"
     volumes:
       - ./data:/app/data
+      - ./data:/app/database/data
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend

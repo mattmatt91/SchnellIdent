@@ -1,20 +1,18 @@
-import pandas as pd
+import requests
 
-# Create a sample Pandas DataFrame
-data = {
-    'Name': ['Alice', 'Bob', 'Charlie'],
-    'Age': [25, 30, 35],
-    'City': ['New York', 'Los Angeles', 'Chicago']
-}
 
-df = pd.DataFrame(data)
 
-# Convert the DataFrame to JSON with default settings
-json_data = df.to_json()
-print("JSON with default settings:")
-print(json_data)
+# url = f"http://127.0.0.1:3000/measurement"
+# response_id = requests.get(url)
+# print(response_id.json())
+# 
+# 
+# 
+# url = f"http://127.0.0.1:3000/get_all_measurements"
+# response = requests.get(url)
+# print(response.json())
 
-# Convert the DataFrame to JSON with specific options
-json_data = df.to_json(orient='records', lines=True)
-print("\nJSON with 'records' orientation and 'lines' format:")
-print(json_data)
+response_id = "f2e20dd3-4909-4d02-b4bf-6cfab9cb1030"
+url = f"http://127.0.0.1:3000/get_dataset/{response_id}"
+response = requests.get(url)
+print(response.json())
