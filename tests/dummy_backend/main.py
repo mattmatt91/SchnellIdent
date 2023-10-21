@@ -7,6 +7,7 @@ import string
 import time
 import asyncio
 from fastapi.middleware.cors import CORSMiddleware
+from datetime import datetime
 
 
 ids = [''.join(random.choices(string.ascii_letters + string.digits, k=8)) for _ in range(10)]
@@ -30,17 +31,18 @@ def generate_mock_data():
         ir = round(random.uniform(0, 10), 2)
         mic = round(random.uniform(0, 10), 2)
         data.append({"timestamp": timestamp, "IR": ir, "MIC": mic})
-    print(data)
     return data
 
 # Route to serve the mock data with a 5-second delay
 @app.get("/measurement")
 async def get_measurement_data():
-    print("recieving request")
     await asyncio.sleep(5)  # Simulate a 5-second delay
     data = generate_mock_data()
-    print(data)
-    return data
+    id = get_current_datetime_string()
+    params = {"duration": 1, "rate": 1000,
+              "power": 1, "duration_heater": 1, "id": id}
+    params["explosive"] = random.choice([True, False])
+    return {"data":data, "params":params}
 
 @app.get("/get_all_ids", response_model=List[str])
 def get_all_ids():
@@ -49,7 +51,16 @@ def get_all_ids():
 @app.get("/get_measurement/{id}")
 def get_measurement(id: str):
     if id in ids:
-        return generate_mock_data()
+        params = {"duration": 1, "rate": 1000,
+              "power": 1, "duration_heater": 1, "id": id}
+        params["explosive"] = random.choice([True, False])
+        data = generate_mock_data()
+        return {"data":data, "params":params}
     return {"error": "ID not found"}
 
+
+def get_current_datetime_string():
+    now = datetime.now()
+    formatted_datetime = now.strftime("%H_%M_%S-%d_%m_%Y")
+    return formatted_datetime
 

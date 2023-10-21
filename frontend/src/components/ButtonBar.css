@@ -6,7 +6,7 @@
   width: 100%;
   background-color: #000;
   display: flex;
-  padding: 10px; /* Add padding for button spacing */
+  padding: 0px; /* Add padding for button spacing */
   justify-content: space-between; /* Center the buttons horizontally and distribute them equally */
 }
 

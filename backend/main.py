@@ -2,7 +2,8 @@ from fastapi import FastAPI
 import requests
 import uuid
 from fastapi.middleware.cors import CORSMiddleware
-
+from datetime import datetime
+import random
 app = FastAPI()
 
 app.add_middleware(
@@ -21,14 +22,14 @@ def read_root():
 
 @app.get("/measurement")
 async def measure_data():
-    id = str(uuid.uuid4())
+    id = get_current_datetime_string()
     params = {"duration": 1, "rate": 1000,
               "power": 1, "duration_heater": 1, "id": id}
     url = 'http://hardware:3010/start'
     data = requests.post(url=url, json=params).json()
-
+    params = eval_measurement(data, params)
     url = f"http: //database: 3040/add_dataset/{id}"
-    response = requests.post(url, json={"data": data, "info": params})
+    requests.post(url, json={"data": data, "info": params})
     data = convert_to_list(data)
     return data
 
@@ -38,8 +39,9 @@ async def get_data(id: str):
     url = f"http: //database: 3040/get_dataset/{id}"
     response = requests.get(url)
     if response.status_code == 200:
-        data = response.json()["data"]
-        return convert_to_list(data)
+        data =  convert_to_list(response.json()["data"])
+        params = response.json()["params"]
+        return data
 
 
 @app.get("/get_all_ids")
@@ -58,3 +60,13 @@ def convert_to_list(data: dict):
     print(new_data)
 
     return new_data
+
+def get_current_datetime_string():
+    now = datetime.now()
+    formatted_datetime = now.strftime("%H_%M_%S-%d_%m_%Y")
+    return formatted_datetime
+
+
+def eval_measurement(data:dict, params:dict):
+    
+    params["explosive"] = random.choice([True, False])
