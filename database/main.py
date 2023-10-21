@@ -27,7 +27,7 @@ def add_dataset(database_name, dataset_id, data, info):
     cursor = conn.cursor()
     # Convert data and info dictionaries to JSON strings
     data_json = json.dumps(data)
-    info_json = json.dumps(info)ß
+    info_json = json.dumps(info)
     cursor.execute('INSERT INTO datasets (id, data, info) VALUES (?, ?, ?)',
                    (dataset_id, data_json, info_json))
     conn.commit()

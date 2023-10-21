@@ -31,7 +31,7 @@ async def measure_data():
     url = f"http: //database: 3040/add_dataset/{id}"
     requests.post(url, json={"data": data, "info": params})
     data = convert_to_list(data)
-    return data
+    return {"data":data, "params":params}
 
 
 @app.get("/get_measurement/{id}")
@@ -41,7 +41,7 @@ async def get_data(id: str):
     if response.status_code == 200:
         data =  convert_to_list(response.json()["data"])
         params = response.json()["params"]
-        return data
+        return {"data":data, "params":params}
 
 
 @app.get("/get_all_ids")
