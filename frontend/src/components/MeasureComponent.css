@@ -1,0 +1,74 @@
+/* Measure component styles */
+.measure {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Center horizontally */
+    justify-content: center;
+    /* Center vertically */
+    height: 100vh;
+    /* Full viewport height */
+    font-size: 50px;
+    /* Font size */
+}
+
+/* Start button styles */
+.start-button {
+    border: 2px solid #444;
+    /* Slightly different border color */
+    border-radius: 10px;
+    /* Rounded edges */
+    background-color: #666;
+    /* Grey background color */
+    color: #fff;
+    /* Text color (white) */
+    font-family: Arial, sans-serif;
+    /* Font family */
+    font-size: 35px;
+    /* Font size */
+    padding: 10px 20px;
+    /* Adjust padding for button size */
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+/* Hover effect for the start button */
+.start-button:hover {
+    background-color: #888;
+    /* Darker grey on hover */
+    border-color: #333;
+    /* Darker border on hover */
+    color: #e5e5e5;
+    /* Text color changes on hover */
+}
+
+/* Pressed effect for the start button */
+.start-button:active {
+    background-color: #ff0000;
+    /* Change to a darker grey when pressed */
+    border-color: #222;
+    /* Darker border when pressed */
+    color: #fff;
+    /* Text color changes when pressed */
+}
+
+/* Back to measurement button styles */
+.back-button {
+    border: 2px solid #444;
+    /* Slightly different border color */
+    border-radius: 10px;
+    /* Rounded edges */
+    background-color: #666;
+    /* Grey background color */
+    color: #fff;
+    /* Text color (white) */
+    font-family: Arial, sans-serif;
+    /* Font family */
+    font-size: 20px;
+    /* Font size */
+    padding: 10px 20px;
+    /* Adjust padding for button size */
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s;
+    /* Define the styles for the "Back to Measurement" button here */
+}

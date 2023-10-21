@@ -1,0 +1,6 @@
+/* Canvas styles */
+.canvas-container {
+    background-color: #000000; /* Black background color */
+    width: 100vw; /* 100% of the viewport width */
+    min-height: 400pt; /* Minimum height of 400 points */
+  }

@@ -34,7 +34,7 @@ async def measure_data():
     return id
 
 
-@app.get("/get_dataset/{id}")
+@app.get("/get_measurement/{id}")
 async def get_data(id: str):
     url = f"http://database:3040/get_dataset/{id}"
     response = requests.get(url)
@@ -44,7 +44,7 @@ async def get_data(id: str):
         return response.json()
 
 
-@app.get("/get_all_measurements")
+@app.get("/get_all_ids")
 async def get_get_all_measurements():
     url = "http://database:3040"
     response = requests.get(f"{url}/list_datasets")

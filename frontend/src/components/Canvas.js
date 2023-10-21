@@ -1,4 +1,5 @@
 // Canvas.js
+import './canvas.css';
 import React from 'react';
 
 function Canvas() {

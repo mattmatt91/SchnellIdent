@@ -1,0 +1,36 @@
+/* Button bar styles */
+.button-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #000;
+  display: flex;
+  padding: 10px; /* Add padding for button spacing */
+  justify-content: space-between; /* Center the buttons horizontally and distribute them equally */
+}
+
+/* Button styles */
+.button-bar button {
+  flex: 1; /* Distribute available space equally among buttons */
+  border: 2px solid #444; /* Slightly different border color */
+  border-radius: 10px; /* Rounded edges */
+  background-color: #666; /* Grey background color */
+  color: #fff; /* Text color (white) */
+  font-family: Arial, sans-serif; /* Font family */
+  font-size: 30px; /* Font size */
+  padding: 10px 20px; /* Adjust padding for button size */
+  cursor: pointer;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+/* Hover effect for buttons */
+.button-bar button:hover {
+  background-color: #888; /* Darker grey on hover */
+  border-color: #333; /* Darker border on hover */
+}
+
+/* Pressed effect for buttons */
+.button-bar button:active {
+  background-color: #444; /* Change to a darker grey when pressed */
+}
