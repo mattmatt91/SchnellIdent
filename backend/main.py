@@ -7,11 +7,12 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Add your React app's URL here
+    allow_origins=["http://localhost:3000"], 
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 @app.get("/")
 def read_root():
@@ -21,34 +22,39 @@ def read_root():
 @app.get("/measurement")
 async def measure_data():
     id = str(uuid.uuid4())
-    params = {"duration": 10, "rate": 1000,
+    params = {"duration": 1, "rate": 1000,
               "power": 1, "duration_heater": 1, "id": id}
     url = 'http://hardware:3010/start'
     data = requests.post(url=url, json=params).json()
 
-    url = f"http://database:3040/add_dataset/{id}"
-    print(url)
+    url = f"http: //database: 3040/add_dataset/{id}"
     response = requests.post(url, json={"data": data, "info": params})
-    print(response)
-    print("Add Dataset Response:", response.status_code)
-    return id
+    data = convert_to_list(data)
+    return data
 
 
 @app.get("/get_measurement/{id}")
 async def get_data(id: str):
-    url = f"http://database:3040/get_dataset/{id}"
+    url = f"http: //database: 3040/get_dataset/{id}"
     response = requests.get(url)
-    print("Get Dataset Response:", response.status_code)
     if response.status_code == 200:
-        # print("Dataset:", response.json())
-        return response.json()
+        data = response.json()["data"]
+        return convert_to_list(data)
 
 
 @app.get("/get_all_ids")
 async def get_get_all_measurements():
     url = "http://database:3040"
     response = requests.get(f"{url}/list_datasets")
-    print("List Datasets Response:", response.status_code)
     if response.status_code == 200:
-        print("Dataset IDs:", response.json()["dataset_ids"])
-        return response.json()
+        return response.json()["dataset_ids"]
+
+
+def convert_to_list(data: dict):
+    new_data = []
+    for i in data["IR"]:
+        new_data.append(
+            {"timestamp": i, "MIC": data["MIC"][i], "IR": data["IR"][i]})
+    print(new_data)
+
+    return new_data

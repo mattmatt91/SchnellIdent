@@ -5,7 +5,7 @@ import DataPlotComponent from './DataPlotComponent';
 function PlotComponent() {
   const [ids, setIds] = useState([]);
   const [selectedId, setSelectedId] = useState('');
-  const [data, setData] = useState([]); // Initialize data as an empty array
+  const [data, setData] = useState(null); // Initialize data as null
 
   useEffect(() => {
     const fetchIds = async () => {
@@ -54,7 +54,9 @@ function PlotComponent() {
         </select>
         <button onClick={fetchData}>Fetch Data</button>
       </div>
-      {data.length > 0 && <DataPlotComponent data={data} />}
+      {data && (
+        <DataPlotComponent data={data} />
+      )}
     </div>
   );
 }

@@ -22,7 +22,7 @@ app.add_middleware(
 )
 # Function to generate random data
 def generate_mock_data():
-    duration = 3  # 3 seconds duration
+    duration = 1  # 3 seconds duration
     sampling_rate = 1000  # 1000 Hz
     data = []
     for t in range(0, duration * sampling_rate):
@@ -30,6 +30,7 @@ def generate_mock_data():
         ir = round(random.uniform(0, 10), 2)
         mic = round(random.uniform(0, 10), 2)
         data.append({"timestamp": timestamp, "IR": ir, "MIC": mic})
+    print(data)
     return data
 
 # Route to serve the mock data with a 5-second delay
@@ -38,6 +39,7 @@ async def get_measurement_data():
     print("recieving request")
     await asyncio.sleep(5)  # Simulate a 5-second delay
     data = generate_mock_data()
+    print(data)
     return data
 
 @app.get("/get_all_ids", response_model=List[str])

@@ -2,6 +2,7 @@ import React from 'react';
 import Plot from 'react-plotly.js';
 
 function DataPlotComponent({ data }) {
+  console.log(data)
   const timestampData = data.map((point) => point.timestamp);
   const irData = data.map((point) => point.IR);
   const micData = data.map((point) => point.MIC);
