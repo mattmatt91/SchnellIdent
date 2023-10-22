@@ -3,13 +3,12 @@ import './PlotComponent.css';
 import DataPlotComponent from './DataPlotComponent';
 
 function PlotComponent() {
-  const [ids, setIds] = useState([]); // Initialize ids as an empty array
+  const [ids, setIds] = useState([]);
   const [selectedId, setSelectedId] = useState('');
-  const [data, setData] = useState(null); // Initialize data as null
-  const [params, setParams] = useState(null); // Initialize parameters as null
+  const [data, setData] = useState(null);
+  const [params, setParams] = useState(null);
 
   useEffect(() => {
-    // Fetch IDs only once on component mount
     const fetchIds = async () => {
       try {
         const response = await fetch('http://localhost:4000/get_all_ids');
@@ -27,7 +26,7 @@ function PlotComponent() {
     if (ids.length === 0) {
       fetchIds();
     }
-  }, [ids]); // This ensures that fetchIds is only called once
+  }, [ids]);
 
   const fetchData = async () => {
     if (selectedId) {
@@ -67,8 +66,20 @@ function PlotComponent() {
       )}
       {params && (
         <div className="params">
-          <p>Explosive: {params.explosive ? <span style={{ color: 'red' }}>True</span> : <span style={{ color: 'green' }}>False</span>}</p>
-          {/* Add more parameter display here */}
+          <table>
+            <tr>
+              <th>Parameter</th>
+              <th>Value</th>
+            </tr>
+            {Object.entries(params).map(([param, value]) => (
+              <tr key={param}>
+                <td>{param}</td>
+                <td style={{ color: param === 'explosive' ? (value ? 'red' : 'green') : 'white' }}>
+                  {param === 'explosive' ? (value ? 'True' : 'False') : value}
+                </td>
+              </tr>
+            ))}
+          </table>
         </div>
       )}
     </div>

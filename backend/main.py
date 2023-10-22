@@ -27,20 +27,22 @@ async def measure_data():
               "power": 1, "duration_heater": 1, "id": id}
     url = 'http://hardware:3010/start'
     data = requests.post(url=url, json=params).json()
+    
     params = eval_measurement(data, params)
-    url = f"http: //database: 3040/add_dataset/{id}"
-    requests.post(url, json={"data": data, "info": params})
+
+    url = f"http://database:3040/add_dataset/{id}"
+    response = requests.post(url, json={"data": data, "info": params})
     data = convert_to_list(data)
     return {"data":data, "params":params}
 
 
 @app.get("/get_measurement/{id}")
 async def get_data(id: str):
-    url = f"http: //database: 3040/get_dataset/{id}"
+    url = f"http://database:3040/get_dataset/{id}"
     response = requests.get(url)
     if response.status_code == 200:
-        data =  convert_to_list(response.json()["data"])
-        params = response.json()["params"]
+        data =  convert_to_list(response.json()["data"])   
+        params = response.json()["info"]
         return {"data":data, "params":params}
 
 
@@ -50,6 +52,7 @@ async def get_get_all_measurements():
     response = requests.get(f"{url}/list_datasets")
     if response.status_code == 200:
         return response.json()["dataset_ids"]
+    
 
 
 def convert_to_list(data: dict):
@@ -57,8 +60,6 @@ def convert_to_list(data: dict):
     for i in data["IR"]:
         new_data.append(
             {"timestamp": i, "MIC": data["MIC"][i], "IR": data["IR"][i]})
-    print(new_data)
-
     return new_data
 
 def get_current_datetime_string():
@@ -70,3 +71,4 @@ def get_current_datetime_string():
 def eval_measurement(data:dict, params:dict):
     
     params["explosive"] = random.choice([True, False])
+    return params

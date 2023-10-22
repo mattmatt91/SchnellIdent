@@ -10,7 +10,17 @@ from fastapi.middleware.cors import CORSMiddleware
 from datetime import datetime
 
 
-ids = [''.join(random.choices(string.ascii_letters + string.digits, k=8)) for _ in range(10)]
+# ids = [''.join(random.choices(string.ascii_letters + string.digits, k=8)) for _ in range(10)]
+
+def get_current_datetime_string():
+    now = datetime.now()
+    formatted_datetime = now.strftime("%H_%M_%S-%d_%m_%Y")
+    return formatted_datetime
+
+ids = []
+for i in range(10):
+    ids.append(get_current_datetime_string()+str(i))
+
 app = FastAPI()
 
 # Configure CORS settings
@@ -39,6 +49,7 @@ async def get_measurement_data():
     await asyncio.sleep(5)  # Simulate a 5-second delay
     data = generate_mock_data()
     id = get_current_datetime_string()
+    ids.append(id)
     params = {"duration": 1, "rate": 1000,
               "power": 1, "duration_heater": 1, "id": id}
     params["explosive"] = random.choice([True, False])
@@ -52,15 +63,11 @@ def get_all_ids():
 def get_measurement(id: str):
     if id in ids:
         params = {"duration": 1, "rate": 1000,
-              "power": 1, "duration_heater": 1, "id": id}
+              "power": 1, "duration_heater": 1, "id": id,"explosive":True}
         params["explosive"] = random.choice([True, False])
         data = generate_mock_data()
         return {"data":data, "params":params}
     return {"error": "ID not found"}
 
 
-def get_current_datetime_string():
-    now = datetime.now()
-    formatted_datetime = now.strftime("%H_%M_%S-%d_%m_%Y")
-    return formatted_datetime
 

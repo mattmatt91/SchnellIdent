@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import DataPlotComponent from './DataPlotComponent';
-import { ClipLoader } from 'react-spinners'; // Import the ClipLoader spinner
+import { ClipLoader } from 'react-spinners';
 import './MeasureComponent.css';
 
 function MeasureComponent() {
@@ -9,7 +9,7 @@ function MeasureComponent() {
   const [params, setParams] = useState(null);
 
   const handleRequest = async () => {
-    setLoading(true); // Show loading animation
+    setLoading(true);
 
     try {
       const response = await fetch('http://localhost:4000/measurement');
@@ -21,10 +21,10 @@ function MeasureComponent() {
       setData(measurementData);
       setParams(measurementParams);
 
-      setLoading(false); // Hide loading animation when data is received
+      setLoading(false);
     } catch (error) {
       console.error('Error:', error);
-      setLoading(false); // Hide loading animation in case of an error
+      setLoading(false);
     }
   };
 
@@ -32,7 +32,7 @@ function MeasureComponent() {
     <div className="measure">
       {loading ? (
         <div className="loading-animation">
-          <ClipLoader color={'red'} loading={loading} size={100} /> {/* Use ClipLoader */}
+          <ClipLoader color={'red'} loading={loading} size={100} />
         </div>
       ) : data ? (
         <>
@@ -42,8 +42,20 @@ function MeasureComponent() {
           </button>
 
           <div className="params">
-            <p>Explosive: {params.explosive ? <span style={{ color: 'red' }}>True</span> : <span style={{ color: 'green' }}>False</span>}</p>
-            {/* Add more parameter display here */}
+            <table>
+              <tr>
+                <th>Parameter</th>
+                <th>Value</th>
+              </tr>
+              {Object.entries(params).map(([param, value]) => (
+                <tr key={param}>
+                  <td>{param}</td>
+                  <td style={{ color: param === 'explosive' ? (value ? 'red' : 'green') : 'white' }}>
+                    {param === 'explosive' ? (value ? 'True' : 'False') : value}
+                  </td>
+                </tr>
+              ))}
+            </table>
           </div>
         </>
       ) : (
