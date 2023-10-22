@@ -67,10 +67,7 @@ function PlotComponent() {
       {params && (
         <div className="params">
           <table>
-            <tr>
-              <th>Parameter</th>
-              <th>Value</th>
-            </tr>
+
             {Object.entries(params).map(([param, value]) => (
               <tr key={param}>
                 <td>{param}</td>
