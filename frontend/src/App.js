@@ -11,16 +11,14 @@ function App() {
 
   return (
     <div className="app">
-      <p>
-        <Header className="header" />
-      </p>
-      <p>
-        {activeComponent === 'measure' && <MeasureComponent className="measure" />}
-        {activeComponent === 'plot' && <PlotComponent className="data" />}
-      </p>
-      <p>
-        <ButtonBar setActiveComponent={setActiveComponent} className="footer" />
-      </p>
+
+      <Header className="header" />
+
+      {activeComponent === 'measure' && <MeasureComponent className="measure" />}
+      {activeComponent === 'plot' && <PlotComponent className="data" />}
+
+      <ButtonBar setActiveComponent={setActiveComponent} className="footer" />
+
     </div>
   );
 }
