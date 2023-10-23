@@ -1,7 +1,46 @@
 /* Apply styles to the body element */
-
 body {
     background-color: #000;
+    margin: 0; /* Add this to remove body margin */
+    padding: 0; /* Add this to remove body padding */
+    height: 100vh; /* Make the body take up the full viewport height */
+}
+
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #000000;
+    display: flex;
     justify-content: center;
     align-items: center;
+    overflow: hidden; /* Add overflow: hidden to prevent any content overflow */
+    height: 15vh; /* 15% of the viewport height */
+}
+
+.footer {
+    position: fixed;
+    bottom:0;
+    left: 0;
+    width: 100%;
+    background-color: #000000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; /* Add overflow: hidden to prevent any content overflow */
+    height: 15vh; /* 15% of the viewport height */
+}
+
+
+.measure, .data {
+    left: 0;
+    right: 0;
+    overflow: auto;
+    position: absolute;
+    top: 15vh; /* Shift down by 15% of the viewport height */
+    bottom: 15vh;
+    margin: 0 auto;
+    max-width: 100%;
+    height: calc(100vh - 25vh); /* Adjust the height to fit between the header and footer */
 }

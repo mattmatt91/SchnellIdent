@@ -46,7 +46,7 @@ def generate_mock_data():
 # Route to serve the mock data with a 5-second delay
 @app.get("/measurement")
 async def get_measurement_data():
-    await asyncio.sleep(5)  # Simulate a 5-second delay
+    # await asyncio.sleep(5)  # Simulate a 5-second delay
     data = generate_mock_data()
     id = get_current_datetime_string()
     ids.append(id)

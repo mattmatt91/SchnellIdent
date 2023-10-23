@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import './PlotComponent.css';
-import DataPlotComponent from './DataPlotComponent';
+import './DataComponent.css';
+import DataDisplayComponent from './DataDisplayComponent';
 
 function PlotComponent() {
   const [ids, setIds] = useState([]);
@@ -49,7 +49,10 @@ function PlotComponent() {
   };
 
   return (
-    <div className="plot-component">
+    <div className="data">
+      <div>
+        <DataDisplayComponent data={data} params={params} />
+      </div>
       <div>
         <select value={selectedId} onChange={(e) => setSelectedId(e.target.value)}>
           <option value="">Select an ID</option>
@@ -61,24 +64,6 @@ function PlotComponent() {
         </select>
         <button onClick={fetchData}>Fetch Data</button>
       </div>
-      {data && (
-        <DataPlotComponent data={data} />
-      )}
-      {params && (
-        <div className="params">
-          <table>
-
-            {Object.entries(params).map(([param, value]) => (
-              <tr key={param}>
-                <td>{param}</td>
-                <td style={{ color: param === 'explosive' ? (value ? 'red' : 'green') : 'white' }}>
-                  {param === 'explosive' ? (value ? 'True' : 'False') : value}
-                </td>
-              </tr>
-            ))}
-          </table>
-        </div>
-      )}
     </div>
   );
 }

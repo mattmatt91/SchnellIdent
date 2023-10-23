@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import DataPlotComponent from './DataPlotComponent';
 import { ClipLoader } from 'react-spinners';
 import './MeasureComponent.css';
+import DataDisplayComponent from './DataDisplayComponent';
 
 function MeasureComponent() {
   const [loading, setLoading] = useState(false);
@@ -26,37 +26,25 @@ function MeasureComponent() {
       console.error('Error:', error);
       setLoading(false);
     }
-  };
+  }
 
-  
   return (
-    <div className="measure">
+    <div className='measure'>
       {loading ? (
         <div className="loading-animation">
           <ClipLoader color={'red'} loading={loading} size={100} />
         </div>
       ) : data ? (
-        <>
-          <DataPlotComponent data={data} />
-          <div className="params">
-            <table>
-              <thead></thead>
-              <tbody>
-                {Object.entries(params).map(([param, value]) => (
-                  <tr key={param}>
-                    <td>{param}</td>
-                    <td style={{ color: param === 'explosive' ? (value ? 'red' : 'green') : 'white' }}>
-                      {param === 'explosive' ? (value ? 'True' : 'False') : value}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        <div className='canvas'>
+          <div>
+            <DataDisplayComponent className="data-display" data={data} params={params} />
           </div>
-          <button className="back-button" onClick={() => setData(null)}>
-            Back to Measurement
-          </button>
-        </>
+          <div>
+            <button className="back-button" onClick={() => setData(null)}>
+              Back to Measurement
+            </button>
+          </div>
+        </div>
       ) : (
         <button className="start-button" onClick={handleRequest}>
           Start Measurement
@@ -64,6 +52,7 @@ function MeasureComponent() {
       )}
     </div>
   );
+  
 }
 
 export default MeasureComponent;

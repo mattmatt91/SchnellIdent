@@ -3,7 +3,7 @@ import './App.css';
 import Header from './components/Header';
 import ButtonBar from './components/ButtonBar';
 import MeasureComponent from './components/MeasureComponent';
-import PlotComponent from './components/PlotComponent';
+import PlotComponent from './components/DataComponent';
 import React, { useState } from 'react';
 
 function App() {
@@ -11,12 +11,16 @@ function App() {
 
   return (
     <div className="app">
-      <Header />
-      <div className="canvas-container">
-        {activeComponent === 'measure' && <MeasureComponent />}
-        {activeComponent === 'plot' && <PlotComponent />}
-      </div>
-      <ButtonBar setActiveComponent={setActiveComponent} />
+      <p>
+        <Header className="header" />
+      </p>
+      <p>
+        {activeComponent === 'measure' && <MeasureComponent className="measure" />}
+        {activeComponent === 'plot' && <PlotComponent className="data" />}
+      </p>
+      <p>
+        <ButtonBar setActiveComponent={setActiveComponent} className="footer" />
+      </p>
     </div>
   );
 }
