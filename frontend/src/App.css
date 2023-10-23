@@ -1,10 +1,7 @@
 /* Apply styles to the body element */
+
 body {
-  background-color: #000; /* Black background color */
-  display: flex;
-  justify-content: center; /* Center horizontally */
-  align-items: center; /* Center vertically */
-  min-height: 100vh;
-  font-size: calc(10px + 2vmin);
-  color: #fff; /* Text color (white) */
+    background-color: #000;
+    justify-content: center;
+    align-items: center;
 }

@@ -28,6 +28,7 @@ function MeasureComponent() {
     }
   };
 
+  
   return (
     <div className="measure">
       {loading ? (
@@ -39,8 +40,7 @@ function MeasureComponent() {
           <DataPlotComponent data={data} />
           <div className="params">
             <table>
-              <thead>
-              </thead>
+              <thead></thead>
               <tbody>
                 {Object.entries(params).map(([param, value]) => (
                   <tr key={param}>

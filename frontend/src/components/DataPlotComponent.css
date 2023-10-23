@@ -1,0 +1,21 @@
+/* Data Plot Component styles */
+
+.data-plot {
+    max-width: 90%;
+    /* Set the maximum width to 90% of the container */
+    width: 100%;
+    /* Ensure the plot takes the full width of the container */
+    margin: 0 auto;
+    /* Center the plot horizontally */
+    position: relative;
+    /* Add relative positioning */
+    top: 0;
+    /* Position it at the top of the container */
+    transform: translateY(0);
+    /* Reset vertical transformation */
+    z-index: -1;
+    /* Place it behind the content */
+    display: flex;
+    justify-content: center;
+    /* Center horizontally within the container */
+}
