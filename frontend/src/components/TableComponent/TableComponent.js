@@ -1,5 +1,5 @@
 import React from 'react';
-import './DataTableComponent.css'; //
+import './TableComponent.css'; //
 
 function DataTableComponent({ params }) {
   return (

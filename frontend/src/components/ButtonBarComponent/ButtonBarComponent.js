@@ -1,4 +1,4 @@
-import './ButtonBar.css';
+import './ButtonBarComponent.css';
 import React from 'react';
 
 function ButtonBar({ setActiveComponent }) {

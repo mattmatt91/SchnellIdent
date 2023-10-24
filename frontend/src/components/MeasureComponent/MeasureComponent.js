@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ClipLoader } from 'react-spinners';
 import './MeasureComponent.css';
-import DataDisplayComponent from './DataDisplayComponent';
+import DataDisplayComponent from '..//DataDisplayComponent/DataDisplayComponent';
 
 function MeasureComponent() {
   const [loading, setLoading] = useState(false);

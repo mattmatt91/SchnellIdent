@@ -1,6 +1,6 @@
 import React from 'react';
 import Plot from 'react-plotly.js';
-import './DataPlotComponent.css';
+import './PlotComponent.css';
 
 function DataPlotComponent({ data }) {
   const timestampData = data.map((point) => point.timestamp);

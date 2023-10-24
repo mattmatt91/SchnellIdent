@@ -1,0 +1,41 @@
+.params {
+    color: #fff;
+    font-family: Arial, sans-serif;
+    font-size: 2vw;
+
+    cursor: pointer;
+    width: 100%;
+
+
+}
+
+.params table {
+    width: 100%;
+    border-collapse: collapse;
+
+}
+
+.params thead {
+    background-color: #444;
+    color: #fff;
+    font-weight: bold;
+    text-align: cneter;
+}
+
+.params tbody {
+    background-color: #666;
+    color: #fff;
+}
+
+.params td {
+    border: 1px solid #444;
+    padding: 1vh 2vw;
+}
+
+.params td[data-param="explosive"] {
+    color: red;
+}
+
+.params td[data-value="False"] {
+    color: green;
+}

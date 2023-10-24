@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './DataComponent.css';
-import DataDisplayComponent from './DataDisplayComponent';
+import DataDisplayComponent from '..//DataDisplayComponent/DataDisplayComponent';
 
 function PlotComponent() {
   const [ids, setIds] = useState([]);
@@ -51,9 +51,6 @@ function PlotComponent() {
   return (
     <div className="data">
       <div>
-        <DataDisplayComponent data={data} params={params} />
-      </div>
-      <div>
         <select value={selectedId} onChange={(e) => setSelectedId(e.target.value)}>
           <option value="">Select an ID</option>
           {ids.map((id) => (
@@ -63,6 +60,9 @@ function PlotComponent() {
           ))}
         </select>
         <button onClick={fetchData}>Fetch Data</button>
+      </div>
+      <div>
+        <DataDisplayComponent data={data} params={params} />
       </div>
     </div>
   );
