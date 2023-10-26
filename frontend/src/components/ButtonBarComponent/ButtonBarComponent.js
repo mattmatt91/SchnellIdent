@@ -1,13 +1,14 @@
+import { MEASURE, PLOT } from '../../App';
 import './ButtonBarComponent.css';
 import React from 'react';
 
 function ButtonBar({ setActiveComponent }) {
   return (
     <div className="button-bar">
-      <button className="button" onClick={() => setActiveComponent('measure')}>
+      <button className="button" onClick={() => setActiveComponent(MEASURE)}>
         Measure
       </button>
-      <button className="button" onClick={() => setActiveComponent('plot')}>
+      <button className="button" onClick={() => setActiveComponent(PLOT)}>
         Data
       </button>
     </div>

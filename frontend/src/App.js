@@ -8,6 +8,11 @@ import MeasureComponent from './components//MeasureComponent/MeasureComponent';
 import PlotComponent from './components/DataComponent/DataComponent';
 import React, { useState } from 'react';
 
+export const MEASURE ="measure"
+
+export const PLOT ="plot"
+
+
 function App() {
   const [activeComponent, setActiveComponent] = useState(null);
   
@@ -16,8 +21,8 @@ function App() {
 
       <Header className="header" />
 
-      {activeComponent === 'plot' && <PlotComponent className="main" />}
-      {activeComponent === 'measure' && <MeasureComponent className="main" />}
+      {activeComponent === PLOT && <PlotComponent className="main" />}
+      {activeComponent === MEASURE && <MeasureComponent className="main" />}
 
       <ButtonBar setActiveComponent={setActiveComponent} className="footer" />
 
