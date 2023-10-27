@@ -1,18 +1,18 @@
 version: "1"
 services:
   backend:
-    build:
-      context: ./backend
-    ports:
-      - "4000:4000"
-    depends_on:
-      - hardware
+   build:
+     context: ./backend
+   ports:
+     - "4000:4000"
+   depends_on:
+     - hardware
 
   hardware:
-    build:
-      context: ./hardware
-    ports:
-      - "3010:3010"
+   build:
+     context: ./hardware
+   ports:
+     - "3010:3010"
 
   database:
     build:

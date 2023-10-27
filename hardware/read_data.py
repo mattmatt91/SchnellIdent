@@ -7,7 +7,6 @@ from sys import stdout
 from daqhats import mcc118, OptionFlags, HatIDs, HatError
 from daqhats_utils import select_hat_device, enum_mask_to_string, \
     chan_list_to_mask
-import pandas as pd
 
 CURSOR_BACK_2 = '\x1b[2D'
 ERASE_TO_END_OF_LINE = '\x1b[0K'
@@ -34,9 +33,7 @@ def get_data(scan_rate: float, samples_per_channel: int, channels: list, channel
                 hat, samples_per_channel, num_channels)
             for name, i in zip(channel_names, range(num_channels)):
                 data[name]=raw_data[i]
-            data = pd.DataFrame(data)
-            data["Time"] = [i/(1/scan_rate) for i in range(len(data.index))]
-            data.set_index("Time", inplace=True)
+            data["time"] = [i*(1/scan_rate) for i in range(len(data.index))]
         except KeyboardInterrupt:
             # Clear the '^C' from the display.
             print(CURSOR_BACK_2, ERASE_TO_END_OF_LINE, '\n')

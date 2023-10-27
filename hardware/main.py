@@ -2,10 +2,9 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from datetime import datetime, timedelta
 import random
-import pandas as pd
 from time import sleep
 import threading
-# from read_data import get_data
+from read_data import get_data
 
 # from read_data import read_data
 
@@ -51,13 +50,10 @@ def generate_random_data(rate:int, duration:int):
     ir_data = [round(random.uniform(0, 1),2) for _ in range(num_data_points)]
     mic_data = [round(random.uniform(0, 1),2) for _ in range(num_data_points)]
     data = {
-        "Time": time_intervals,
+        "time": time_intervals,
         "IR": ir_data,
         "MIC": mic_data
     }
-    df = pd.DataFrame(data)
-    df["Time"] = df["Time"] 
-    df.set_index('Time', inplace=True)
     sleep(duration)
-    return df
+    return data
 
