@@ -1,196 +1,87 @@
+#!/usr/bin/env python
+#  -*- coding: utf-8 -*-
 
-"""
-This module reads data from the DAQ Hardware.
-It is based on the mcculw libary.
-"""
-
-from __future__ import absolute_import, division, print_function
-from builtins import *  # @UnusedWildImport
-
-from time import sleep, time_ns, time
-from ctypes import cast, POINTER, c_double
-
-from mcculw import ul
-from mcculw.enums import ULRange, AnalogInputMode, ScanOptions, \
-    FunctionType, Status, DigitalPortType,  DigitalIODirection
-from mcculw.device_info import DaqDeviceInfo
-
+from __future__ import print_function
+from time import sleep
+from sys import stdout
+from daqhats import mcc118, OptionFlags, HatIDs, HatError
+from daqhats_utils import select_hat_device, enum_mask_to_string, \
+    chan_list_to_mask
 import pandas as pd
-import matplotlib.pyplot as plt
+
+CURSOR_BACK_2 = '\x1b[2D'
+ERASE_TO_END_OF_LINE = '\x1b[0K'
 
 
-def read_data(properties):
-    device_to_show = "USB-1808"
-    board_num = 0
-    rate = properties['rate']
-    points_per_channel = 10000
-    memory_handle = None
-    ai_range = ULRange.BIP10VOLTS
-    max_samples = rate*properties['duration']
-
-    buff_check = 0  # 0 = lower_half, 1 = upper_half
-
-    # Verify board is Board 0 in InstaCal.  If not, show message...
-    print("Looking for Board 0 in InstaCal to be {0} series..."
-          .format(device_to_show))
-
+def get_data(scan_rate: float, samples_per_channel: int, channels: list, channel_names: list):
+    channel_mask = chan_list_to_mask(channels)
+    num_channels = len(channels)
+    options = OptionFlags.DEFAULT
     try:
-        # Get the devices name...
-        board_name = ul.get_board_name(board_num)
+        # Select an MCC 118 HAT device to use.
+        address = select_hat_device(HatIDs.MCC_118)
+        hat = mcc118(address)
 
-    except Exception as e:
-        if ul.ErrorCode(1):
-            # No board at that number throws error
-            print("\nNo board found at Board 0.")
-            print(e)
-            return
-    
-    else:
-        if device_to_show in board_name:
-            # Board 0 is the desired device...
-            print("{0} found as Board number {1}.\n"
-                  .format(board_name, board_num))
-            ul.flash_led(board_num)
+        actual_scan_rate = hat.a_in_scan_actual_rate(num_channels, scan_rate)
 
-        else:
-            # Board 0 is NOT desired device...
-            print("\nNo {0} series found as Board 0. Please run InstaCal."
-                  .format(device_to_show))
-            return
-    try:
-        # select channels...
-        low_channel = 0
-        high_channel = len(properties['sensors'])-1
-        num_channels = high_channel - low_channel + 1
+        # Configure and start the scan.
+        hat.a_in_scan_start(channel_mask, samples_per_channel, scan_rate,
+                            options)
 
-        # Set channel(s) to single ended input mode...
-        for channel in range(num_channels):
-            ul.a_chan_input_mode(board_num, channel,
-                                 AnalogInputMode.DIFFERENTIAL)
-
-        # set up digital out
-        port_value = 0xFF
-        magnet = True
-        daq_dev_info = DaqDeviceInfo(board_num)
-        dio_info = daq_dev_info.get_dio_info()
-        port = next((port for port in dio_info.port_info if port.supports_output),
-                    None)
-        if not port:
-            raise Exception('Error: The DAQ device does not support '
-                            'digital output')
-
-        if port.is_port_configurable:
-            ul.d_config_port(board_num, port.type, DigitalIODirection.OUT)
-        print('Setting', port.type.name, 'to', port_value)
-        ul.d_out(board_num, port.type, port_value)
-
-        # Set up memory handle...
-        total_count = points_per_channel * num_channels
-        memory_handle = ul.scaled_win_buf_alloc(total_count)
-        buffer_mid_point = total_count / 2
-
-        # Convert the memory_handle to a ctypes array...
-        ctypes_array = cast(memory_handle, POINTER(c_double))
-
-        # Check if the buffer was successfully allocated...
-        if not memory_handle:
-            raise Exception('Error: Failed to allocate memory')
-
-        scan_options = ScanOptions.BACKGROUND | ScanOptions.SCALEDATA
-        scan_options |= ScanOptions.CONTINUOUS
-
-
-        # Start the scan...
-        ul.a_in_scan(
-            board_num, low_channel, high_channel, total_count,
-            rate, ai_range, memory_handle, scan_options)
-
-        # print('actual scan rate = ', '{:.6f}'.format(rate), 'Hz\n')
-
-        print('Please enter CTRL + C to terminate the process\n')
-
-        status, current_count, current_index = ul.get_status(
-            board_num, FunctionType.AIFUNCTION)
-
-        start = False
-        while start == False:
-            user_input = input('press 1 to start')
-            if int(user_input) == 1:
-                start = True
-
+        data = {}
         try:
-            data = []
-            last_time = time()
-            start_time = time_ns()
-            sample_index = 0
-            while status != Status.IDLE and sample_index <= max_samples:
-
-                # controll the magnet
-                ############################################
-                # if time() - last_time >= droptime and magnet:
-                #     magnet = False
-                #     ul.d_out(board_num, port.type, 0000)
-                #     print('magnet falling')
-                ############################################
-                try:
-                    # Get the status of the background operation
-                    status, current_count, current_index = ul.get_status(
-                        board_num, FunctionType.AIFUNCTION)
-                           
-                    # Display the data.
-                    if current_index > buffer_mid_point:
-                        # get the lower half.
-                        if buff_check == 0:
-                            buff_check = 1
-                            loop_index = 0
-                            while loop_index < buffer_mid_point:
-                                my_buffer = []
-                                sample_index += 1
-                                for data_index in range(loop_index,
-                                                        (loop_index + num_channels)):
-                                    eng_value = ctypes_array[data_index]
-                                    my_buffer.append(eng_value)
-                                data.append(my_buffer)
-                                loop_index += num_channels
-
-                    elif current_index < buffer_mid_point:
-                        # get the upper half.
-                        if buff_check == 1:
-                            buff_check = 0
-                            loop_index = int(buffer_mid_point)
-                            while loop_index < total_count:
-                                my_buffer = []
-                                sample_index += 1
-                                for data_index in range(loop_index,
-                                                        (loop_index + num_channels)):
-                                    eng_value = ctypes_array[data_index]
-                                    my_buffer.append(eng_value)
-                                data.append(my_buffer)
-                                loop_index += num_channels
-                except (ValueError, NameError, SyntaxError):
-                    break
-
+            raw_data = read_and_display_data(
+                hat, samples_per_channel, num_channels)
+            for name, i in zip(channel_names, range(num_channels)):
+                data[name]=raw_data[i]
+            data = pd.DataFrame(data)
+            data["Time"] = [i/(1/scan_rate) for i in range(len(data.index))]
+            data.set_index("Time", inplace=True)
         except KeyboardInterrupt:
-            pass
+            # Clear the '^C' from the display.
+            print(CURSOR_BACK_2, ERASE_TO_END_OF_LINE, '\n')
+            hat.a_in_scan_stop()
+        hat.a_in_scan_cleanup()
+        return data
 
-    except Exception as e:
-        print('\n', e)
-
-    finally:
-        
-        ul.stop_background(board_num, FunctionType.AIFUNCTION)
-        print('\nScan completed successfully')
-        print('measurement time = ', '{:10d}'.format(time_ns()- start_time))
-
-        if memory_handle:
-                    # Free the buffer in a finally block to prevent a memory leak.
-                    ul.win_buf_free(memory_handle)
-
-        df = pd.DataFrame(data, columns=properties['sensors'])
-        df['time'] = [i/rate for i in df.index]
-        df.set_index('time', inplace=True) 
-        return df
-        
-        
+    except (HatError, ValueError) as err:
+        print('\n', err)
 
 
+def read_and_display_data(hat, samples_per_channel, num_channels):
+    total_samples_read = 0
+    read_request_size = 500
+    timeout = 5.0
+
+    data = []
+    while total_samples_read < samples_per_channel:
+        read_result = hat.a_in_scan_read(read_request_size, timeout)
+        data.append(read_result.data)
+        # Check for an overrun error
+        if read_result.hardware_overrun:
+            print('\n\nHardware overrun\n')
+            break
+        elif read_result.buffer_overrun:
+            print('\n\nBuffer overrun\n')
+            break
+
+        samples_read_per_channel = int(len(read_result.data) / num_channels)
+        total_samples_read += samples_read_per_channel
+
+    data = [item for sublist in data for item in sublist]
+    data = transform_data(data, num_channels)
+    return data
+    print('\n')
+
+
+def transform_data(data: list, number_of_channels: int):
+    new_data = [[] for _ in range(number_of_channels)]
+    for i, value in enumerate(data):
+        sensor_index = i % number_of_channels
+        new_data[sensor_index].append(value)
+    return new_data
+
+
+if __name__ == '__main__':
+    data = get_data(10000, 10000, [1, 2], ["mic", "ir"])
+    print(data)

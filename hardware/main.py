@@ -5,6 +5,7 @@ import random
 import pandas as pd
 from time import sleep
 import threading
+# from read_data import get_data
 
 # from read_data import read_data
 
@@ -29,7 +30,13 @@ async def start(data: MeasurementData):
     return data
 
 def read_data(rate:int, duration:int):
+    samples_per_channel = rate * duration
+    channel_mic = 1,
+    channel_ir = 2
+
+
     data = generate_random_data(rate, duration)
+    #data = get_data(rate, samples_per_channel, [channel_mic, channel_ir], ["mic", "ir"])
     return data
 
 def toggle_heater(power:int, duration:int):
