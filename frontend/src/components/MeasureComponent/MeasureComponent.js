@@ -12,7 +12,7 @@ function MeasureComponent() {
     setLoading(true);
 
     try {
-      const response = await fetch('http://localhost:4000/measurement');
+      const response = await fetch('http://192.168.1.30:4000/measurement');
       const responseData = await response.json();
 
       const measurementData = responseData.data;

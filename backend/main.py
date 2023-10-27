@@ -27,7 +27,6 @@ async def measure_data():
               "power": 1, "duration_heater": 1, "id": id}
     url = 'http://hardware:3010/start'
     data = requests.post(url=url, json=params).json()
-    
     params = eval_measurement(data, params)
 
     url = f"http://database:3040/add_dataset/{id}"
@@ -57,9 +56,9 @@ async def get_get_all_measurements():
 
 def convert_to_list(data: dict):
     new_data = []
-    for i in data["IR"]:
+    for i, n in zip(data["time"], range(len(data["time"]))):
         new_data.append(
-            {"timestamp": i, "MIC": data["MIC"][i], "IR": data["IR"][i]})
+            {"timestamp": i, "MIC": data["MIC"][n], "IR": data["IR"][n]})
     return new_data
 
 def get_current_datetime_string():
@@ -69,6 +68,5 @@ def get_current_datetime_string():
 
 
 def eval_measurement(data:dict, params:dict):
-    
     params["explosive"] = random.choice([True, False])
     return params
