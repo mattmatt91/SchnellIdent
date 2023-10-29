@@ -11,7 +11,7 @@ function PlotComponent() {
   useEffect(() => {
     const fetchIds = async () => {
       try {
-        const response = await fetch('http://192.168.1.30:4000/get_all_ids', {mode:'cors'});
+        const response = await fetch('http://${process.env.LOCAL_IP_ADDRESS}:4000/get_all_ids', {mode:'cors'});
         if (response.ok) {
           const idList = await response.json();
           setIds(idList);
@@ -31,7 +31,7 @@ function PlotComponent() {
   const fetchData = async () => {
     if (selectedId) {
       try {
-        const response = await fetch(`http://192.168.1.30:4000/get_measurement/${selectedId}`, {mode:'cors'});
+        const response = await fetch(`http://${process.env.LOCAL_IP_ADDRESS}:4000/get_measurement/${selectedId}`, {mode:'cors'});
         if (response.ok) {
           const responseData = await response.json();
           const measurementData = responseData.data;

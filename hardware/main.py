@@ -3,20 +3,15 @@ from pydantic import BaseModel
 from datetime import datetime, timedelta
 import random
 from time import sleep
-import threading
 from read_data import get_data
-import socket
 from fastapi.middleware.cors import CORSMiddleware
-
+import platform
 
 app = FastAPI()
-allowed_origins = [
-    "*"  # Update with your second IP or URL
-]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[allowed_origins], 
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -45,15 +40,14 @@ def read_data(rate:int, duration:int):
     channel_mic = 1,
     channel_ir = 2
 
-
-    #data = generate_random_data(rate, duration)
-    data = get_data(rate, samples_per_channel, [channel_mic, channel_ir], ["mic", "ir"])
-    #return get_data(10000, 10000, [1, 2], ["mic", "ir"])
+    if platform.system == "Linux":
+        data = get_data(rate, samples_per_channel, [channel_mic, channel_ir], ["mic", "ir"])
+    else:
+        data = generate_random_data(rate, duration)
     return data
 
 def toggle_heater(power:int, duration:int):
     pass
-
 
 
 # moc data    

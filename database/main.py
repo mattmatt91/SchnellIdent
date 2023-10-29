@@ -4,18 +4,14 @@ import sqlite3
 import json
 from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI()
-allowed_origins = [
-    "*"  # Update with your second IP or URL
-]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[allowed_origins], 
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-# Create a SQLite database and a "datasets" table
 
 
 def create_database(database_name):
@@ -30,13 +26,10 @@ def create_database(database_name):
     conn.commit()
     conn.close()
 
-# Add a new dataset to the database
-
 
 def add_dataset(database_name, dataset_id, data, info):
     conn = sqlite3.connect(database_name)
     cursor = conn.cursor()
-    # Convert data and info dictionaries to JSON strings
     data_json = json.dumps(data)
     info_json = json.dumps(info)
     cursor.execute('INSERT INTO datasets (id, data, info) VALUES (?, ?, ?)',
@@ -69,9 +62,11 @@ def list_dataset_ids(database_name):
 
 
 script_directory = os.path.dirname(os.path.abspath(__file__))
-database_name = os.path.join(script_directory, os.pardir, "data", "dataset_db.db")
+database_name = os.path.join(
+    script_directory, os.pardir, "data", "dataset_db.db")
 print(database_name)
 database_name = "dataset_db.db"
+
 
 @app.on_event("startup")
 def create_if_not_exists():

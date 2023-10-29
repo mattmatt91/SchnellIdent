@@ -12,7 +12,7 @@ function MeasureComponent() {
     setLoading(true);
 
     try {
-      const response = await fetch('http://192.168.1.30:4000/measurement', {mode:'cors'});
+      const response = await fetch('http://${process.env.LOCAL_IP_ADDRESS}:4000/measurement', {mode:'cors'});
       const responseData = await response.json();
 
       const measurementData = responseData.data;
