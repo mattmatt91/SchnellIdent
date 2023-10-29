@@ -5,8 +5,22 @@ import random
 from time import sleep
 import threading
 from read_data import get_data
+import socket
+from fastapi.middleware.cors import CORSMiddleware
 
-# from read_data import read_data
+
+app = FastAPI()
+allowed_origins = [
+    "*"  # Update with your second IP or URL
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[allowed_origins], 
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 class MeasurementData(BaseModel):
     duration: int
@@ -15,13 +29,11 @@ class MeasurementData(BaseModel):
     duration_heater: int
     id: str
 
-app = FastAPI()
-
 
 @app.post("/start")
 async def start(data: MeasurementData):
-    rate = data.rate
-    duration = data.duration
+    rate = int(data.rate)
+    duration = int(data.duration)
     power= data.power
     duration_heater = data.duration_heater
     id = data.id
@@ -34,8 +46,9 @@ def read_data(rate:int, duration:int):
     channel_ir = 2
 
 
-    data = generate_random_data(rate, duration)
-    #data = get_data(rate, samples_per_channel, [channel_mic, channel_ir], ["mic", "ir"])
+    #data = generate_random_data(rate, duration)
+    data = get_data(rate, samples_per_channel, [channel_mic, channel_ir], ["mic", "ir"])
+    #return get_data(10000, 10000, [1, 2], ["mic", "ir"])
     return data
 
 def toggle_heater(power:int, duration:int):

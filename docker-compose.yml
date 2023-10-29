@@ -9,6 +9,7 @@ services:
      - hardware
 
   hardware:
+   privileged: true
    build:
      context: ./hardware
    ports:
@@ -30,3 +31,4 @@ services:
       - "3000:3000"
     depends_on:
       - backend
+#

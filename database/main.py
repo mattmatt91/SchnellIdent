@@ -1,9 +1,20 @@
+import os
 from fastapi import FastAPI, HTTPException
 import sqlite3
 import json
-
+from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI()
+allowed_origins = [
+    "*"  # Update with your second IP or URL
+]
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[allowed_origins], 
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 # Create a SQLite database and a "datasets" table
 
 
@@ -57,8 +68,10 @@ def list_dataset_ids(database_name):
     return dataset_ids
 
 
-database_name = 'data/dataset_db.db'
-
+script_directory = os.path.dirname(os.path.abspath(__file__))
+database_name = os.path.join(script_directory, os.pardir, "data", "dataset_db.db")
+print(database_name)
+database_name = "dataset_db.db"
 
 @app.on_event("startup")
 def create_if_not_exists():
@@ -84,3 +97,8 @@ def get_dataset_route(dataset_id: str):  # dataset_id: str):
 def list_datasets_route():
     dataset_ids = list_dataset_ids(database_name)
     return {"dataset_ids": dataset_ids}
+
+
+@app.get("/")
+def test_route():
+    return {"data": "test"}

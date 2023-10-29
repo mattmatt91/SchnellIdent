@@ -4,7 +4,7 @@
 from __future__ import print_function
 from time import sleep
 from sys import stdout
-from daqhats import mcc118, OptionFlags, HatIDs, HatError
+from daqhats import mcc118, OptionFlags, HatIDs, HatError, hat_list
 from daqhats_utils import select_hat_device, enum_mask_to_string, \
     chan_list_to_mask
 
@@ -13,7 +13,7 @@ ERASE_TO_END_OF_LINE = '\x1b[0K'
 
 
 def get_data(scan_rate: float, samples_per_channel: int, channels: list, channel_names: list):
-    channel_mask = chan_list_to_mask(channels)
+    channel_mask = chan_list_to_mask([1,2])
     num_channels = len(channels)
     options = OptionFlags.DEFAULT
     try:
@@ -31,9 +31,10 @@ def get_data(scan_rate: float, samples_per_channel: int, channels: list, channel
         try:
             raw_data = read_and_display_data(
                 hat, samples_per_channel, num_channels)
+            
             for name, i in zip(channel_names, range(num_channels)):
                 data[name]=raw_data[i]
-            data["time"] = [i*(1/scan_rate) for i in range(len(data.index))]
+            data["time"] = [i*(1/scan_rate) for i in range(len(data["mic"]))]
         except KeyboardInterrupt:
             # Clear the '^C' from the display.
             print(CURSOR_BACK_2, ERASE_TO_END_OF_LINE, '\n')
@@ -80,5 +81,7 @@ def transform_data(data: list, number_of_channels: int):
 
 
 if __name__ == '__main__':
-    data = get_data(10000, 10000, [1, 2], ["mic", "ir"])
-    print(data)
+    #data = get_data(10000, 10000, [1, 2], ["mic", "ir"])
+    #print(data)
+    hats = hat_list(filter_by_id=0)
+    print(hats)
