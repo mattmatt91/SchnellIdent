@@ -3,6 +3,13 @@ from fastapi import FastAPI, HTTPException
 import sqlite3
 import json
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse, StreamingResponse
+import csv
+import zipfile
+from io import BytesIO
+
+
+
 app = FastAPI()
 
 app.add_middleware(
@@ -64,7 +71,6 @@ def list_dataset_ids(database_name):
 script_directory = os.path.dirname(os.path.abspath(__file__))
 database_name = os.path.join(
     script_directory, os.pardir, "data", "dataset_db.db")
-print(database_name)
 database_name = "dataset_db.db"
 
 
@@ -97,3 +103,30 @@ def list_datasets_route():
 @app.get("/")
 def test_route():
     return {"data": "test"}
+
+@app.get("/download_zip")
+async def download_zip():
+    in_memory_zip = BytesIO()
+
+    with zipfile.ZipFile(in_memory_zip, 'a', zipfile.ZIP_DEFLATED) as archive:
+        dataset_ids = list_dataset_ids(database_name)
+        for dataset_id in dataset_ids:
+            dataset = read_dataset(database_name, dataset_id)
+            
+            # CSV file for the data
+            data_csv = BytesIO()
+            print(data_csv)
+            return data_csv
+            writer = csv.DictWriter(data_csv, fieldnames=dataset["data"][0].keys())
+            writer.writeheader()
+            writer.writerows(dataset["data"])
+            data_csv.seek(0)
+            archive.writestr(f"{dataset_id}/data.csv", data_csv.getvalue())
+            
+            # JSON file for the info
+            info_json = json.dumps(dataset["info"])
+            archive.writestr(f"{dataset_id}/info.json", info_json)
+
+    in_memory_zip.seek(0)
+
+    return StreamingResponse(in_memory_zip, media_type="application/zip", headers={"Content-Disposition": "attachment; filename=datasets.zip"})
