@@ -1,0 +1,4 @@
+#!/bin/bash
+export LOCAL_IP_ADDRESS='0.0.0.0'
+cd frontend
+npm start

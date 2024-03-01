@@ -1,9 +1,14 @@
-import './HeaderComponent.css';
-import React from 'react';
+// HeaderComponent.js
 
-function Header() {
+import React from 'react';
+import './HeaderComponent.css';
+
+function Header({ toggleFullscreen }) {
   return (
-    <img className="header" src="logo.jpg" alt="Ascot" />
+    <div className="header">
+      <img src="logo.jpg" alt="Ascot" />
+      <button onClick={toggleFullscreen} className="fullscreen-toggle">Toggle Fullscreen</button>
+    </div>
   );
 }
 

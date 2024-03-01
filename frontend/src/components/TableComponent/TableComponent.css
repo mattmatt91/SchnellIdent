@@ -1,41 +1,43 @@
+/* TableComponent.css */
+
 .params {
-    color: #fff;
-    font-family: Arial, sans-serif;
-    font-size: 2vw;
-
-    cursor: pointer;
+    font-family: Arial, sans-serif; /* Same font as your buttons */
+    color: white; /* Adjust the color as needed */
+    padding: 10px;
+    overflow-x: auto; /* In case the table is too wide */
+  }
+  
+  table {
     width: 100%;
-
-
-}
-
-.params table {
-    width: 100%;
-    border-collapse: collapse;
-
-}
-
-.params thead {
-    background-color: #444;
-    color: #fff;
-    font-weight: bold;
-    text-align: cneter;
-}
-
-.params tbody {
-    background-color: #666;
-    color: #fff;
-}
-
-.params td {
-    border: 1px solid #444;
-    padding: 1vh 2vw;
-}
-
-.params td[data-param="explosive"] {
-    color: red;
-}
-
-.params td[data-value="False"] {
-    color: green;
-}
+    border-collapse: collapse; /* Ensures that the border is neat */
+    margin: 0 auto; /* Centers the table horizontally */
+    border-radius: 8px; /* Border radius (but this won't be visible unless the table has a background or border as a whole) */
+    overflow: hidden; /* Ensures the rounded corners are visible */
+  }
+  
+  th, td {
+    padding: 8px; /* Padding inside each cell */
+    text-align: left; /* Aligns text to the left */
+    border-bottom: 2px solid #ccc; /* Border for each cell, specify thickness and color here */
+  }
+  
+  th {
+    background-color: #333; /* Background color for the header cells */
+    color: white; /* Text color for the header cells */
+    border-top: 2px solid #ccc; /* Top border for header cells, specify thickness and color */
+  }
+  
+  tbody tr:last-child td {
+    border-bottom: none; /* Removes the bottom border from the last row */
+  }
+  
+  td {
+    border-radius: 4px; /* Border radius for table cells, if desired */
+  }
+  
+  /* Style adjustments for cells containing 'explosive' data */
+  td[style*="color: red"], 
+  td[style*="color: green"] {
+    font-weight: bold; /* Makes the font bold for emphasis */
+  }
+  

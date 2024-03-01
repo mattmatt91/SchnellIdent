@@ -12,7 +12,7 @@ function PlotComponent() {
     const fetchIds = async () => {
       try {
         const localIpAddress = process.env.LOCAL_IP_ADDRESS || '192.168.1.30';
-        const response = await fetch(`http://${localIpAddress}:4000/get_all_ids`, {mode:'cors'});
+        const response = await fetch(`http://0.0.0.0:4000/get_all_ids`, {mode:'cors'});
         if (response.ok) {
           const idList = await response.json();
           setIds(idList);
@@ -33,7 +33,7 @@ function PlotComponent() {
     if (selectedId) {
       try {
         const localIpAddress = process.env.LOCAL_IP_ADDRESS || '192.168.1.30';
-        const response = await fetch(`http://${localIpAddress}:4000/get_measurement/${selectedId}`, {mode:'cors'});
+        const response = await fetch(`http://0.0.0.0:4000/get_measurement/${selectedId}`, {mode:'cors'});
         if (response.ok) {
           const responseData = await response.json();
           const measurementData = responseData.data;

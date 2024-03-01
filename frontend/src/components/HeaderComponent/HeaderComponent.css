@@ -1,5 +1,24 @@
-
-.header img {
-    height: 100%; /* Match the height of the header */
+.header {
+  height: 10vh; /* Adjust based on your design, vh stands for viewport height */
+  display: flex; /* Enables flexbox layout */
+  /*justify-content: center;  Centers the child horizontally */
+  /*align-items: center;  Centers the child vertically */
+  background-color: black; /* Optional: in case you want a background color */
+  justify-content: space-between;
+  align-items: center;
 }
 
+.header img {
+  height: 80%; /* Makes the image fill the height of the header */
+  width: auto; /* Scales the width automatically to maintain aspect ratio */
+  object-fit: contain; /* Ensures the image is scaled correctly without cropping */
+}
+/* HeaderComponent.css */
+
+
+
+.fullscreen-toggle {
+  padding: 5px 10px;
+  margin: 10px;
+  cursor: pointer;
+}

@@ -111,13 +111,12 @@ async def download_zip():
     with zipfile.ZipFile(in_memory_zip, 'a', zipfile.ZIP_DEFLATED) as archive:
         dataset_ids = list_dataset_ids(database_name)
         for dataset_id in dataset_ids:
+            print(dataset_id)
             dataset = read_dataset(database_name, dataset_id)
-            
             # CSV file for the data
             data_csv = BytesIO()
-            print(data_csv)
-            return data_csv
-            writer = csv.DictWriter(data_csv, fieldnames=dataset["data"][0].keys())
+            print(data_csv.read())
+            writer = csv.DictWriter(data_csv, fieldnames=dataset["data"].keys())
             writer.writeheader()
             writer.writerows(dataset["data"])
             data_csv.seek(0)

@@ -1,66 +1,43 @@
+/* MeasureComponent.css */
+
 .measure {
-  height: 100%;
-  text-align: center; 
-  background-color:#000000;
-}
-
-
-.loading-animation {
-  justify-content: center; /* Center horizontally */
-  align-items: center; /* Center vertically */
-}
-
-.start-button {
-    border: 2px solid #444;
- 
-    border-radius: 10px;
-    background-color: #666;
-    color: #fff;
-    font-family: Arial, sans-serif;
-    font-size: 35px;
-    padding: 10px 20px;
-    cursor: pointer;
-    transition: background-color 0.3s, border-color 0.3s;
-}
-
-.start-button:hover {
-    background-color: #888;
-    border-color: #333;
-    color: #e5e5e5;
-}
-
-.start-button:active {
-    background-color: #ff0000;
-    border-color: #222;
-    color: #fff;
-
-}
-
-
-.back-button {
-    border: 2px solid #444;
-    border-radius: 10px;
-    background-color: #666;
-    color: #fff;
-    font-family: Arial, sans-serif;
-    font-size: 20px;
-    padding: 10px 20px;
-    cursor: pointer;
-    transition: background-color 0.3s, border-color 0.3s;
-    margin-top: 20px; 
-
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
   }
   
-  .back-button:hover {
-    background-color: #888;
-    border-color: #333;
-    color: #e5e5e5;
+  .start-button {
+      width: 50%;
+
+  }
+ .back-button {
+      width: 100%;
+
+  }
+  .start-button, .back-button {
+    padding: 10px;
+    margin: 10px 0; /* Adds margin above and below the button */
+    font-size: 16px; /* Example font size, adjust as needed */
+    font-family: Arial, sans-serif; /* Consistent font style */
+    cursor: pointer;
+    border: none;
+    align-items:center;
+    border-radius: 5px; /* Rounded corners */
+    background-color: #f0f0f0;  /* Example background color, adjust as needed */
+    color: rgb(0, 0, 0); /* Text color */
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
   }
   
-  .back-button:active {
-    background-color: #ff0000;
-    border-color: #222;
-    color: #fff;
-    
+  .start-button:hover, .back-button:hover {
+    background-color: #ff7f7f; /* Darker shade on hover, adjust as needed */
   }
-  /**/
+  
+  .loading-animation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+  

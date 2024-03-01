@@ -17,7 +17,7 @@ function DataPlotComponent({ data }) {
             type: 'scatter',
             mode: 'lines',
             name: 'IR',
-            line: { color: 'blue' },
+            line: { color: 'grey' },
           },
           {
             x: timestampData,
@@ -25,7 +25,7 @@ function DataPlotComponent({ data }) {
             type: 'scatter',
             mode: 'lines',
             name: 'MIC',
-            line: { color: 'orange' },
+            line: { color: 'white' },
           },
         ]}
         layout={{
