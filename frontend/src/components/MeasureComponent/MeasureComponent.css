@@ -6,6 +6,7 @@
     align-items: center;
     justify-content: center;
     height: 100%;
+    padding-top: 10%;
   }
   
   .start-button {
@@ -31,7 +32,8 @@
   }
   
   .start-button:hover, .back-button:hover {
-    background-color: #ff7f7f; /* Darker shade on hover, adjust as needed */
+    background-color: #666666; /* Darker shade on hover, adjust as needed */
+    background-color: #666666; /* Darker shade on hover, adjust as needed */
   }
   
   .loading-animation {

@@ -6,6 +6,7 @@
     justify-content: center;
     align-items: center;
     height: 100%;
+    padding-top: 10%;
   }
   
   .data > div {
@@ -37,7 +38,7 @@
   }
   
   button:hover {
-    background-color: #ff7f7f; /* Change color on hover for visual feedback */
+    background-color: #666666; /* Change color on hover for visual feedback */
   }
   
   /* Add any additional styles for select or button to match your footer's styling */
