@@ -24,9 +24,9 @@ WORKDIR /app
 # Copy the rest of the application code
 COPY . /app/
 
-RUN apt-get update && apt-get install -y wget unzip
-RUN chmod +x install_pig.sh
-RUN ./install_pig.sh
+# RUN apt-get update && apt-get install -y wget unzip
+# RUN chmod +x install_pig.sh
+# RUN ./install_pig.sh
 
 # Expose the desired port
 EXPOSE 3010

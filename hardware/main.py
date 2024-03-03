@@ -3,17 +3,21 @@ from pydantic import BaseModel
 from datetime import datetime, timedelta
 import random
 from time import sleep
-from read_data import get_data
+# from read_data import get_data
 from fastapi.middleware.cors import CORSMiddleware
 import platform
+import math
+
+local_ip_address ="localhost"
 
 app = FastAPI()
 
+# Configure CORS settings
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[f"http://{local_ip_address}:4000"],  # Replace with the origin of your frontend
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET"],
     allow_headers=["*"],
 )
 
@@ -51,16 +55,21 @@ def toggle_heater(power:int, duration:int):
 
 
 # moc data    
-def generate_random_data(rate:int, duration:int):
-    num_data_points = int(rate *duration)
-    time_intervals = [timedelta(seconds=i)/rate for i in range(num_data_points)]
-    ir_data = [round(random.uniform(0, 1),2) for _ in range(num_data_points)]
-    mic_data = [round(random.uniform(0, 1),2) for _ in range(num_data_points)]
+
+def generate_random_data(rate: int, duration: int):
+    num_data_points = int(rate * duration)
+    time_intervals = [(i / rate) for i in range(num_data_points)]  # List of seconds
+    t = [2 * math.pi * duration * i / num_data_points for i in range(num_data_points)]
+    ir_data = [math.sin(val) + random.gauss(0, 0.1) for val in t]
+    mic_data = [math.sin(val + math.pi) + random.gauss(0, 0.1) for val in t]
+    ir_data = [round(val, 2) for val in ir_data]
+    mic_data = [round(val, 2) for val in mic_data]
     data = {
-        "time": time_intervals,
+        "time": time_intervals,  # List of time in seconds
         "IR": ir_data,
         "MIC": mic_data
     }
-    sleep(duration)
+    sleep(duration)  # Simulating a delay to mimic real-time data generation
     return data
+
 

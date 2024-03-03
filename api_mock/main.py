@@ -1,16 +1,16 @@
 from fastapi import FastAPI
 from typing import List
 import random
-from typing import List
-import random
-import string
-import time
 import asyncio
 from fastapi.middleware.cors import CORSMiddleware
 from datetime import datetime
+import string
+import requests
 
 
-# ids = [''.join(random.choices(string.ascii_letters + string.digits, k=8)) for _ in range(10)]
+local_ip_address ="localhost"
+
+
 
 def get_current_datetime_string():
     now = datetime.now()
@@ -26,7 +26,7 @@ app = FastAPI()
 # Configure CORS settings
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Replace with the origin of your frontend
+    allow_origins=[f"http://{local_ip_address}:3000"],  # Replace with the origin of your frontend
     allow_credentials=True,
     allow_methods=["GET"],
     allow_headers=["*"],
@@ -69,5 +69,7 @@ def get_measurement(id: str):
         return {"data":data, "params":params}
     return {"error": "ID not found"}
 
-
+@app.get("/")
+def read_root():
+    return "test from backend"
 

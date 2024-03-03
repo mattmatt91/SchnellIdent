@@ -3,25 +3,20 @@ from fastapi.middleware.cors import CORSMiddleware
 from datetime import datetime
 import random
 import requests
-import os
 
 
-
-
-
-local_ip_address = local_ip_address = os.getenv("LOCAL_IP_ADDRESS")
+local_ip_address ="localhost"
 
 app = FastAPI()
 
-
+# Configure CORS settings
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allow requests from all origins
+    allow_origins=[f"http://{local_ip_address}:3000"],  # Replace with the origin of your frontend
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET"],
     allow_headers=["*"],
 )
-
 
 @app.get("/")
 def read_root():
@@ -41,6 +36,7 @@ async def measure_data():
     params = {"duration": 1, "rate": 1000,
               "power": 1, "duration_heater": 1, "id": id}
     url = f'http://{local_ip_address}:3010/start'
+    # url = f'http://hardware:3010/start'
     data = requests.post(url=url, json=params).json()
     params = eval_measurement(data, params)
 
