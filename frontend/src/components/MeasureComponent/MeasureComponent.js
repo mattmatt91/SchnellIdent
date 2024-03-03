@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { ClipLoader } from 'react-spinners';
 import './MeasureComponent.css';
 import DataDisplayComponent from '..//DataDisplayComponent/DataDisplayComponent';
+import * as API from '../../service/api'
+
 
 function MeasureComponent() {
   const [loading, setLoading] = useState(false);
@@ -12,14 +14,9 @@ function MeasureComponent() {
     setLoading(true);
 
     try {
-      //const localIpAddress = process.env.LOCAL_IP_ADDRESS || '192.168.1.30';
-      //const response = await fetch(`http://${localIpAddress}:4000/measurement`, {mode: 'cors'});
-      const response = await fetch(`http://localhost:4000/measurement`, {mode: 'cors'});
-
-      const responseData = await response.json();
-
-      const measurementData = responseData.data;
-      const measurementParams = responseData.params;
+      const response = await API.getMeasurement();
+      const measurementData = response.data;
+      const measurementParams = response.params;
 
       setData(measurementData);
       setParams(measurementParams);

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './DataComponent.css';
 import DataDisplayComponent from '..//DataDisplayComponent/DataDisplayComponent';
+import * as API from '../../service/api'
 
 function PlotComponent() {
   const [ids, setIds] = useState([]);
@@ -11,14 +12,9 @@ function PlotComponent() {
   useEffect(() => {
     const fetchIds = async () => {
       try {
-        const localIpAddress = process.env.LOCAL_IP_ADDRESS || '192.168.1.30';
-        const response = await fetch(`http://0.0.0.0:4000/get_all_ids`, {mode:'cors'});
-        if (response.ok) {
-          const idList = await response.json();
-          setIds(idList);
-        } else {
-          console.error('Error fetching IDs:', response.statusText);
-        }
+        const idList = await API.getAllIds();
+        setIds(idList);
+        
       } catch (error) {
         console.error('Error fetching IDs:', error);
       }
@@ -29,20 +25,20 @@ function PlotComponent() {
     }
   }, [ids]);
 
+
+
   const fetchData = async () => {
     if (selectedId) {
       try {
-        const localIpAddress = process.env.LOCAL_IP_ADDRESS || '192.168.1.30';
-        const response = await fetch(`http://0.0.0.0:4000/get_measurement/${selectedId}`, {mode:'cors'});
-        if (response.ok) {
-          const responseData = await response.json();
-          const measurementData = responseData.data;
-          const measurementParams = responseData.params;
-
-          setData(measurementData);
-          setParams(measurementParams);
+        // Await the async call to ensure the promise resolves
+        const responseData = await API.getMeasurementById(selectedId);
+        
+        // Assuming the responseData is structured correctly
+        if (responseData) {
+          setData(responseData.data);  // Assuming responseData has a data property
+          setParams(responseData.params); // Assuming responseData has a params property
         } else {
-          console.error('Error fetching data:', response.statusText);
+          console.error('Error fetching data: No response data');
         }
       } catch (error) {
         console.error('Error fetching data:', error);

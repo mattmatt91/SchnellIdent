@@ -5,16 +5,15 @@ import random
 import requests
 
 
-local_ip_address ="localhost"
 
 app = FastAPI()
 
 # Configure CORS settings
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[f"http://{local_ip_address}:3000"],  # Replace with the origin of your frontend
+    allow_origins=["*"],
     allow_credentials=True,
-    allow_methods=["GET"],
+    allow_methods=["*"],
     allow_headers=["*"],
 )
 
@@ -35,12 +34,11 @@ async def measure_data():
     id = get_current_datetime_string()
     params = {"duration": 1, "rate": 1000,
               "power": 1, "duration_heater": 1, "id": id}
-    url = f'http://{local_ip_address}:3010/start'
-    # url = f'http://hardware:3010/start'
+    url = f'http://hardware:3010/start'
     data = requests.post(url=url, json=params).json()
     params = eval_measurement(data, params)
 
-    url = f"http://{local_ip_address}:3040/add_dataset/{id}"
+    url = f"http://database:3040/add_dataset/{id}"
     response = requests.post(url, json={"data": data, "info": params})
     data = convert_to_list(data)
     return {"data": data, "params": params}
@@ -48,7 +46,7 @@ async def measure_data():
 
 @app.get("/get_measurement/{id}")
 async def get_data(id: str):
-    url = f"http://{local_ip_address}:3040/get_dataset/{id}"
+    url = f"http://database:3040/get_dataset/{id}"
     response = requests.get(url)
     if response.status_code == 200:
         data = convert_to_list(response.json()["data"])
@@ -58,8 +56,7 @@ async def get_data(id: str):
 
 @app.get("/get_all_ids")
 async def get_get_all_measurements():
-    url = f"http://{local_ip_address}:3040"
-    response = requests.get(f"{url}/list_datasets")
+    response = requests.get(f"http://database:3040/list_datasets")
     if response.status_code == 200:
         return response.json()["dataset_ids"]
 
