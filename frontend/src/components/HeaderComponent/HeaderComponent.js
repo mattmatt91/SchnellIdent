@@ -32,7 +32,7 @@ function Header({ toggleFullscreen }) {
         <button onClick={() => {
           toggleFullscreen();
           setIsFullscreen(true);
-        }} className="fullscreen-toggle">
+        }} className="button-fullscreen">
           Toggle Fullscreen
         </button>
       )}

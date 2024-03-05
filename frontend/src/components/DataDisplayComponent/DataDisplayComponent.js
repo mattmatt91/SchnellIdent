@@ -6,12 +6,13 @@ import './DataDisplayComponent.css';
 function DataDisplayComponent({ data, params }) {
     return (
         <div className='data-display'>
-            {data && (
-                <DataPlotComponent data={data} />
-            )}
             {params && (
                 <DataTableComponent params={params} />
-            )}
+                )}
+                {data && (
+                    <DataPlotComponent data={data} />
+                )}
+            
         </div>
     );
 }

@@ -29,8 +29,9 @@ function App() {
     <div className="app">
       <Header className="header" toggleFullscreen={toggleFullscreen} />
       <div className="main">
-        {activeComponent === PLOT && <PlotComponent />}
-        {activeComponent === MEASURE && <MeasureComponent />}
+    {activeComponent === PLOT && <PlotComponent  className="main"/>}
+    {activeComponent === MEASURE && <MeasureComponent className="main"/>}
+    
       </div>
       <ButtonBar setActiveComponent={setActiveComponent} className="footer" />
     </div>

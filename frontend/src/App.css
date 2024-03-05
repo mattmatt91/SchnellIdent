@@ -1,41 +1,118 @@
-/* App.css */
-
+/* General Styles */
 html, body, #root {
   height: 100%;
   margin: 0;
-  background-color: black; /* Set the background color to black */
+  overflow: hidden; /* Prevents scrolling on the body directly */
+  background-color: black;
 }
 
-.app {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  background-color: black; /* Ensure the app background is black */
-
-}
-
-.header, .footer {
-  height: 10%;
-  width: 100%;
-  position: fixed;
-  background-color: black; /* Set background color for header and footer */
-  color: white; /* Adjust text color for visibility */
-  z-index: 2; /* Ensures header and footer are above the main content */
-}
-
+/* Header Styles */
 .header {
+  display: flex;
+  justify-content: center; /* Center items horizontally */
+  align-items: center; /* Center items vertically */
+  height: 8%; /* Header height */
+  width: 100%; /* Full width */
+  position: fixed; /* Fixed at the top */
   top: 0;
+  left: 0;
+  z-index: 10; /* Ensures the header is above other content */
 }
 
-.footer {
-  bottom: 0;
+.header img {
+  max-height: 100%; /* Ensures the image doesn't exceed the header height */
+  width: auto; /* Maintain aspect ratio */
 }
 
+/* Main Content Styles */
 .main {
-  flex: 1;
-  overflow-y: auto;
-  padding-top: 20%; /* Space for the header */
-  padding-bottom: 10%; /* Space for the footer */
-  background-color: black; /* Set the main content background to black */
+  position: absolute;
+  top: 8%; /* Height of the header plus its margin */
+  left: 0;
+  width: 100%;
+  height: 82%; /* Main content height */
+  overflow-y: auto; /* Enables vertical scrolling */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none; /* Firefox */
 }
 
+.main::-webkit-scrollbar {
+  display: none; /* Hide scrollbar for Chrome, Safari, and Opera */
+}
+
+/* Footer Styles */
+.footer {
+  display: flex;
+  justify-content: space-between; /* Space out the buttons */
+  height: 10%; /* Footer height */
+  width: 100%; /* Full width */
+  position: fixed; /* Fixed at the bottom */
+  bottom: 0;
+  left: 0;
+  background-color: black;
+}
+
+.footer .button {
+  width: 50%; /* Each button takes half the footer's width */
+  height: 100%; /* Full height of the footer */
+  margin: 0 2px;
+}
+
+.buttonbar-data-component {
+  display: flex;
+  justify-content: space-between;
+}
+
+.buttonbar-data-component .button {
+  width: 100%; /* Each button takes half the footer's width */
+  margin: 1% 1%;
+}
+
+.measure .button{
+  width: 100%; /* Each button takes half the footer's width */
+  margin: 1% 1%;
+
+}
+
+
+.data-display {
+
+  width: 100%;
+}
+
+/* Adjustments for button for better usability */
+.button {
+  font-family: Arial, sans-serif;
+  color: white;
+  background-color: #333;
+  border-bottom: 2px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-size: 24px;
+  font-family: 'Arial', sans-serif;
+}
+
+.button:hover {
+  background-color: #929292;
+}
+
+
+
+.loading-animation {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+
+.data-plot {
+  width: 600px; /* Fixed width */
+  height: 350px; /* Fixed height */
+  margin: 0 auto; /* Center the plot horizontally if the parent container is wider */
+}
+
+
+
+  

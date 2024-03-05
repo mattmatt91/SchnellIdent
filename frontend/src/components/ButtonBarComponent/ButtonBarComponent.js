@@ -4,7 +4,7 @@ import React from 'react';
 
 function ButtonBar({ setActiveComponent }) {
   return (
-    <div className="button-bar">
+    <div className="footer">
       <button className="button" onClick={() => setActiveComponent(MEASURE)}>
         Measure
       </button>

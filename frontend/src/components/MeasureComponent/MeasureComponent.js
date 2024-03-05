@@ -37,16 +37,16 @@ function MeasureComponent() {
       ) : data ? (
         <div className='canvas'>
           <div>
-            <DataDisplayComponent className="data-display" data={data} params={params} />
-          </div>
-          <div>
-            <button className="back-button" onClick={() => setData(null)}>
+            <button className="button" onClick={() => setData(null)}>
               Back to Measurement
             </button>
           </div>
+          <div>
+            <DataDisplayComponent className="data-display" data={data} params={params} />
+          </div>
         </div>
       ) : (
-        <button className="start-button" onClick={handleRequest}>
+        <button className="button" onClick={handleRequest}>
           Start Measurement
         </button>
       )}

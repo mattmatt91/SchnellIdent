@@ -1,4 +1,4 @@
-version: "1"
+version: '3.8'
 services:
   backend:
     build:
@@ -7,13 +7,14 @@ services:
       - "4000:4000"
     depends_on:
       - hardware
-
+    restart: always
   hardware:
     privileged: true
     build:
       context: ./hardware
     ports:
       - "3010:3010"
+    restart: always
       
   database:
     build:
@@ -23,6 +24,7 @@ services:
     volumes:
       - ./data:/app/data
       - ./data:/app/database/data
+    restart: always
 
   frontend:
     build:
@@ -31,3 +33,4 @@ services:
       - "3000:3000"
     depends_on:
       - backend
+    restart: always

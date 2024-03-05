@@ -13,6 +13,7 @@
     margin: 0 auto; /* Centers the table horizontally */
     border-radius: 8px; /* Border radius (but this won't be visible unless the table has a background or border as a whole) */
     overflow: hidden; /* Ensures the rounded corners are visible */
+    font-size: 24px;
   }
   
   th, td {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './DataComponent.css';
-import DataDisplayComponent from '..//DataDisplayComponent/DataDisplayComponent';
+import DataDisplayComponent from '../DataDisplayComponent/DataDisplayComponent';
 import * as API from '../../service/api'
 
 function PlotComponent() {
@@ -14,7 +14,6 @@ function PlotComponent() {
       try {
         const idList = await API.getAllIds();
         setIds(idList);
-        
       } catch (error) {
         console.error('Error fetching IDs:', error);
       }
@@ -25,15 +24,10 @@ function PlotComponent() {
     }
   }, [ids]);
 
-
-
   const fetchData = async () => {
     if (selectedId) {
       try {
-        // Await the async call to ensure the promise resolves
         const responseData = await API.getMeasurementById(selectedId);
-        
-        // Assuming the responseData is structured correctly
         if (responseData) {
           setData(responseData.data);  // Assuming responseData has a data property
           setParams(responseData.params); // Assuming responseData has a params property
@@ -47,9 +41,9 @@ function PlotComponent() {
   };
 
   return (
-    <div className="data">
-      <div>
-        <select value={selectedId} onChange={(e) => setSelectedId(e.target.value)}>
+    <>
+      <div className="buttonbar-data-component">
+        <select className='button' value={selectedId} onChange={(e) => setSelectedId(e.target.value)}>
           <option value="">Select an ID</option>
           {ids.map((id) => (
             <option key={id} value={id}>
@@ -57,12 +51,12 @@ function PlotComponent() {
             </option>
           ))}
         </select>
-        <button onClick={fetchData}>Fetch Data</button>
+        <button className='button' onClick={fetchData}>Fetch Data</button>
       </div>
-      <div>
+      <div className="daat-display">
         <DataDisplayComponent data={data} params={params} />
       </div>
-    </div>
+    </>
   );
 }
 

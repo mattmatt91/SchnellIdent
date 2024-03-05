@@ -1,5 +1,5 @@
 
-const localIpAddress = "192.168.1.2";
+const localIpAddress = "si.local";
 
 
 export async function getMeasurement() {

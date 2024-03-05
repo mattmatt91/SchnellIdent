@@ -1,5 +1,5 @@
 # Use the official Python image as a base image
-FROM arm32v7/python:3.9-slim
+FROM arm64v8/python:3.9-slim
 
 # Install system dependencies and Git
 RUN apt update && apt install -y git
