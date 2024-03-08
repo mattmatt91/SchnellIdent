@@ -4,7 +4,7 @@ from fastapi.responses import FileResponse
 import database
 
 app = FastAPI()
-database_name = "dataset_db.db"
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -48,12 +48,13 @@ def test_route():
 
 @app.get("/download_datasets_zip")
 async def download_datasets_zip():
-    output_folder = 'data'
-    zip_file_path = 'datasets.zip'
-    database.save_datasets_as_csv(output_folder)
-    database.create_zip_from_folder(output_folder, zip_file_path)
-    return FileResponse(zip_file_path, media_type='application/zip', filename='datasets.zip')
-    
+    output_folder_data = 'data'
+    zip_file_path_data = 'datasets_data.zip'
+    database.save_datasets_as_csv(output_folder_data)
+    database.save_info_as_csv(output_folder_data)
+    database.create_zip_from_folder(output_folder_data, zip_file_path_data)
+    return FileResponse(zip_file_path_data, media_type='application/zip', filename='datasets.zip')
+
 @app.get("/delete_all_datasets")
 def delete_all_datasets():
     try:

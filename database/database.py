@@ -70,7 +70,6 @@ def save_datasets_as_csv(output_folder):
     cursor = conn.cursor()
     cursor.execute('SELECT id, data FROM datasets')
     for dataset_id, data_json in cursor.fetchall():
-        print(dataset_id)
         csv_file_path = os.path.join(output_folder, f"{dataset_id}.csv")
         if os.path.exists(csv_file_path):
             return
@@ -83,6 +82,29 @@ def save_datasets_as_csv(output_folder):
                     writer.writerow(line.split(','))
     conn.close()
 
+
+
+def save_info_as_csv(output_file_path):
+    file_path = os.path.join(output_file_path, "results.csv")
+    all_info_data = []
+    headers = []
+
+    conn = sqlite3.connect(database_name)
+    cursor = conn.cursor()
+    cursor.execute('SELECT info FROM datasets')
+    for info_json in cursor.fetchall():
+        info = json.loads(info_json[0])
+        if not headers:
+            headers = list(info.keys())
+        all_info_data.append([info.get(header) for header in headers])
+    conn.close()
+    print()
+    os.makedirs(output_file_path, exist_ok=True)
+
+    with open(file_path, 'w', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(headers)  # Write the column headers
+        writer.writerows(all_info_data)  # Write the rows of data
 
 def create_zip_from_folder(folder_path, zip_file_path):
     with ZipFile(zip_file_path, 'w', ZIP_DEFLATED) as zipf:
