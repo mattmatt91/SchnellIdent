@@ -1,3 +1,6 @@
+# https://www.opendisplaycase.de/tutorials/raspberry-pi-display-waveshare-lcd-1024x600-hdmi-touch.html
+
+
 sudo nano /boot/firmware/config.txt # append: display_rotate=3
 
 sudo apt-get update && sudo apt-get -y upgrade

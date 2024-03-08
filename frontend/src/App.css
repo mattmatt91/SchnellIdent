@@ -30,7 +30,7 @@ html, body, #root {
   top: 8%; /* Height of the header plus its margin */
   left: 0;
   width: 100%;
-  height: 82%; /* Main content height */
+  height: 75%; /* Main content height */
   overflow-y: auto; /* Enables vertical scrolling */
   -ms-overflow-style: none; /* Internet Explorer 10+ */
   scrollbar-width: none; /* Firefox */
@@ -47,7 +47,7 @@ html, body, #root {
   height: 10%; /* Footer height */
   width: 100%; /* Full width */
   position: fixed; /* Fixed at the bottom */
-  bottom: 0;
+  bottom:5%;
   left: 0;
   background-color: black;
 }

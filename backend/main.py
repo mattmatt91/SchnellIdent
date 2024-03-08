@@ -32,13 +32,13 @@ def get_random_data():
 @app.get("/measurement")
 async def measure_data():
     id = get_current_datetime_string()
-    params = {"duration": 1, "rate": 1000,
-              "power": 1, "duration_heater": 1, "id": id}
+    params = {"duration": 3, "rate": 1000,
+              "power": 5, "duration_heater": 0.1, "id": id}
     url = f'http://hardware:3010/start'
-    data = requests.post(url=url, json=params).json()
+    data, explosive = requests.post(url=url, json=params).json()
     params = eval_measurement(data, params)
-
-    url = f"http://database:3040/add_dataset/{id}"
+    params["explosive"] = explosive
+    url = f"http://database:3040/add_dataset/{id}" ###################################### change against database
     response = requests.post(url, json={"data": data, "info": params})
     data = convert_to_list(data)
     return {"data": data, "params": params}

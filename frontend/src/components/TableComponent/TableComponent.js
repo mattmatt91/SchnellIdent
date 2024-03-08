@@ -2,6 +2,7 @@ import React from 'react';
 import './TableComponent.css'; //
 
 function DataTableComponent({ params }) {
+  console.log(params)
   return (
     <div className="params">
       <table>
@@ -16,7 +17,7 @@ function DataTableComponent({ params }) {
           {Object.entries(params).map(([param, value]) => (
             <tr key={param}>
               <td>{param}</td>
-              <td style={{ color: param === 'explosive' ? (value ? 'red' : 'green') : 'white' }}>
+              <td style={{ backgroundColor: param === 'explosive' ? (value ? 'red' : 'green') : 'black' }}>
                 {param === 'explosive' ? (value ? 'True' : 'False') : value}
               </td>
             </tr>
