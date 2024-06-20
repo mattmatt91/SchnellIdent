@@ -1,0 +1,21 @@
+# Ignore Python cache files
+__pycache__
+*.pyc
+*.pyo
+
+# Ignore version control directory
+.git
+
+# Ignore environment and configuration files
+.env
+.venv
+
+# Ignore IDE and editor directories
+.idea
+.vscode
+
+# Ignore log files
+*.log
+
+# Ignore database files
+*.sqlite3

@@ -20,7 +20,7 @@ html, body, #root {
 }
 
 .header img {
-  max-height: 100%; /* Ensures the image doesn't exceed the header height */
+  max-height: 80%; /* Ensures the image doesn't exceed the header height */
   width: auto; /* Maintain aspect ratio */
 }
 

@@ -27,7 +27,7 @@ function Header({ toggleFullscreen }) {
 
   return (
     <div className="header">
-      <img src="logo.jpg" alt="Company Logo" />
+      <img src="RapId Logo.png" alt="Company Logo" />
       {!isFullscreen && (
         <button onClick={() => {
           toggleFullscreen();
