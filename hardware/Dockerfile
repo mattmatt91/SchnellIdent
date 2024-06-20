@@ -2,7 +2,7 @@
 FROM arm64v8/python:3.9-slim
 
 # Install system dependencies and Git
-RUN apt update && apt install -y git
+#RUN apt update && apt install -y git
 
 # Create a directory for the application
 WORKDIR /app
@@ -11,15 +11,7 @@ WORKDIR /app
 COPY requirements.txt /app/
 RUN pip install --no-cache-dir --upgrade -r requirements.txt
 
-# Clone the daqhats repository
-RUN git clone https://github.com/mccdaq/daqhats.git /app/daqhats
-WORKDIR /app/daqhats
 
-# Install daqhats
-RUN ./install.sh
-
-# Return to the main application directory
-WORKDIR /app
 
 # Copy the rest of the application code
 COPY . /app/

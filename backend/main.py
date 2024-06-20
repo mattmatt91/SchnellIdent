@@ -1,9 +1,9 @@
-"""
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from datetime import datetime
 import random
-# import requests
+import requests
 
 
 
@@ -78,4 +78,3 @@ def get_current_datetime_string():
 def eval_measurement(data: dict, params: dict):
     params["explosive"] = random.choice([True, False])
     return params
-"""

@@ -16,7 +16,7 @@ app = FastAPI()
 # Configure CORS settings
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://backend"],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -49,7 +49,6 @@ def read_data(rate:int, duration:int):
         pass
         data = get_data(rate, samples_per_channel, [channel_mic, channel_ir], ["mic", "ir"])
     else:
-        # data = generate_random_data(rate, duration)
         data, explosive = get_data_mock()
     sleep(duration)  # Simulating a delay to mimic real-time data generation
     return data, explosive

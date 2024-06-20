@@ -22,6 +22,3 @@ ENV NAME backend
 # Command to run the FastAPI application
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "4000", "--reload"]
 
-
-
-# CMD ["python", "-c", "print('Hello, World!')"]

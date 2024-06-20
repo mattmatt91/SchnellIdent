@@ -10,6 +10,10 @@ COPY requirements.txt .
 # Install the dependencies specified in requirements.txt
 RUN pip install --no-cache-dir --upgrade -r requirements.txt
 
+# Clone the daqhats repository
+# RUN git clone https://github.com/mccdaq/daqhats.git /app/daqhats
+# WORKDIR /app/daqhats
+
 # Copy the rest of your application code to the working directory
 COPY . /app
 
