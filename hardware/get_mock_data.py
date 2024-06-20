@@ -1,6 +1,6 @@
 import pandas as pd
 import random
-
+from time import sleep
 
 PATH_IR = "mock_data/mock_ir.csv"
 PATH_MIC = "mock_data/mock_mic.csv"
@@ -14,15 +14,15 @@ df_ir.set_index("time [s]", inplace= True)
 df_ir = df_ir[0.2:0.5]
 
 
-def get_data_mock():
-    key = "pos" if random.choice([True, False]) else "neg"
-    filtered_strings = [s for s in df_ir.columns if s.startswith(key)]
-    print(filtered_strings)
-    id = random.choice(filtered_strings)
+def command_daq(daq_arguments:dict):   
+    items = ["neg_0", "pos_1", "pos_2", "neg_3", "pos_4"]
+    id =  random.choice(items)    
     new_data = pd.DataFrame({"IR":df_ir[id], "MIC":df_mic[id]})
     new_data["time"] = new_data.index
-    return new_data.to_dict(orient='list'), True if key  == "pos" else False
+    sleep(daq_arguments["duration"])
+    return new_data.to_dict(orient='list')
 
 if __name__ == "__main__":
-    print(get_data_mock())
+    print(df_ir)
+    # print(command_daq())
 

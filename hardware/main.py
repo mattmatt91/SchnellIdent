@@ -3,11 +3,12 @@ from pydantic import BaseModel
 from datetime import datetime, timedelta
 import random
 from time import sleep
-# from read_data import get_data
+# from get_data import command_daq 
+from get_mock_data import command_daq
 from fastapi.middleware.cors import CORSMiddleware
 import platform
 import math
-from get_mock_data import get_data_mock
+import pandas as pd
 
 local_ip_address ="localhost"
 
@@ -36,28 +37,16 @@ async def start(data: MeasurementData):
     duration = int(data.duration)
     power= data.power
     duration_heater = data.duration_heater
-    id = data.id
-    data = read_data(rate, duration)
-    return data
-
-def read_data(rate:int, duration:int):
-    samples_per_channel = rate * duration
     channel_mic = 1,
     channel_ir = 2
-
-    if platform.system == "Linux" and False:
-        pass
-        data = get_data(rate, samples_per_channel, [channel_mic, channel_ir], ["mic", "ir"])
-    else:
-        data, explosive = get_data_mock()
-    sleep(duration)  # Simulating a delay to mimic real-time data generation
+    daq_arguments = {"rate":rate, "duration":duration, "power":power, "duration_heater":duration_heater, "channel_ir":channel_ir, "channel_mic":channel_mic}
+    data = command_daq(daq_arguments)
+    explosive = eval_data(data)
+    daq_arguments["explosive"] = explosive 
     return data, explosive
 
-def toggle_heater(power:int, duration:int):
-    pass
 
 
-# moc data    
-
-
-
+def eval_data(data:pd.DataFrame):
+    result = True if random.choice([True, False]) else False
+    return result
