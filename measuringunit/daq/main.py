@@ -1,13 +1,11 @@
-"""
-from fastapi import FastAPI
+from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
-from datetime import datetime
-import random
-# import requests
-
-
+from pydantic import BaseModel
+from typing import Dict
+from read_data_mock import get_data  # Import your actual get_data function
 
 app = FastAPI()
+
 # Configure CORS settings
 app.add_middleware(
     CORSMiddleware,
@@ -17,65 +15,21 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Define a Pydantic model for the expected input
+class SensorDataParams(BaseModel):
+    rate: int = 10000
+    duration: float = 2.0
+    power: float = 0.5
+    duration_heater: float = 0.5
+    channel_ir: int = 0
+    channel_mic: int = 1
+
 @app.get("/")
 def read_root():
     return "test from backend"
 
-
-@app.get("/data")
-def get_random_data():
-    # Generate some random data for demonstration
-    random_numbers = [random.randint(1, 100) for _ in range(5)]
-    return {"random_data": random_numbers}
-
-
-@app.get("/measurement")
-async def measure_data():
-    id = get_current_datetime_string()
-    params = {"duration": 3, "rate": 1000,
-              "power": 5, "duration_heater": 0.1, "id": id}
-    url = f'http://hardware:3010/start'
-    data, explosive = requests.post(url=url, json=params).json()
-    params = eval_measurement(data, params)
-    params["explosive"] = explosive
-    url = f"http://database:3040/add_dataset/{id}" ###################################### change against database
-    response = requests.post(url, json={"data": data, "info": params})
-    data = convert_to_list(data)
-    return {"data": data, "params": params}
-
-
-@app.get("/get_measurement/{id}")
-async def get_data(id: str):
-    url = f"http://database:3040/get_dataset/{id}"
-    response = requests.get(url)
-    if response.status_code == 200:
-        data = convert_to_list(response.json()["data"])
-        params = response.json()["info"]
-        return {"data": data, "params": params}
-
-
-@app.get("/get_all_ids")
-async def get_get_all_measurements():
-    response = requests.get(f"http://database:3040/list_datasets")
-    if response.status_code == 200:
-        return response.json()["dataset_ids"]
-
-
-def convert_to_list(data: dict):
-    new_data = []
-    for i, n in zip(data["time"], range(len(data["time"]))):
-        new_data.append(
-            {"timestamp": i, "MIC": data["MIC"][n], "IR": data["IR"][n]})
-    return new_data
-
-
-def get_current_datetime_string():
-    now = datetime.now()
-    formatted_datetime = now.strftime("%H_%M_%S-%d_%m_%Y")
-    return formatted_datetime
-
-
-def eval_measurement(data: dict, params: dict):
-    params["explosive"] = random.choice([True, False])
-    return params
-"""
+@app.post("/sensor_data")
+async def measure_data(params: SensorDataParams):
+    samples_per_channel = int(params.duration * params.rate)
+    data = get_data(params.rate, samples_per_channel, [params.channel_ir, params.channel_mic], ["mic", "ir"])
+    return data

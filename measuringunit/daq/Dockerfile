@@ -21,11 +21,7 @@ COPY . /app
 EXPOSE 4000
 
 # Set environment variables
-ENV NAME backend
+ENV NAME daq
 
 # Command to run the FastAPI application
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "4000", "--reload"]
-
-
-
-# CMD ["python", "-c", "print('Hello, World!')"]

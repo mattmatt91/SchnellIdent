@@ -35,11 +35,10 @@ async def measure_data():
     params = {"duration": 3, "rate": 1000,
               "power": 5, "duration_heater": 0.1, "id": id}
     url = f'http://hardware:3010/start'
-    data, explosive = requests.post(url=url, json=params).json()
+    data = requests.post(url=url, json=params).json()
     params = eval_measurement(data, params)
-    params["explosive"] = explosive
     url = f"http://database:3040/add_dataset/{id}" ###################################### change against database
-    response = requests.post(url, json={"data": data, "info": params})
+    requests.post(url, json={"data": data, "info": params})
     data = convert_to_list(data)
     return {"data": data, "params": params}
 

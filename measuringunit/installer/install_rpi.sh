@@ -20,7 +20,7 @@ scp install_docker_compose.sh $HOST_NAME@$HOST_IP:~/
 # Execute the Docker installation script on the remote host
 ssh $HOST_NAME@$HOST_IP 'bash ~/install_docker_compose.sh'
 
-bash ../deploy_to_rp
+#bash ../deploy_to_rp
 
 
 # install node and react stuff, npm then nom install and npm start for debugging frontend

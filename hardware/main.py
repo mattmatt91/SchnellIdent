@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 import random
 from time import sleep
 # from get_data import command_daq 
-from get_mock_data import command_daq
+from get_data import command_daq
 from fastapi.middleware.cors import CORSMiddleware
 import platform
 import math
@@ -37,16 +37,16 @@ async def start(data: MeasurementData):
     duration = int(data.duration)
     power= data.power
     duration_heater = data.duration_heater
-    channel_mic = 1,
+    channel_mic = 1
     channel_ir = 2
-    daq_arguments = {"rate":rate, "duration":duration, "power":power, "duration_heater":duration_heater, "channel_ir":channel_ir, "channel_mic":channel_mic}
+    daq_arguments = {"rate":int(rate), 
+                     "duration":float(duration),
+                       "power":float(power),
+                         "duration_heater":float(duration_heater),
+                           "channel_ir":int(channel_ir),
+                             "channel_mic":int(channel_mic)}
     data = command_daq(daq_arguments)
-    explosive = eval_data(data)
-    daq_arguments["explosive"] = explosive 
-    return data, explosive
+
+    return data
 
 
-
-def eval_data(data:pd.DataFrame):
-    result = True if random.choice([True, False]) else False
-    return result

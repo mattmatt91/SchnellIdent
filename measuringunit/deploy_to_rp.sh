@@ -1,38 +1,38 @@
 #!/bin/bash
 
 # SSH details
-SSH_USER="si"
-SSH_SERVER="si.local"
-DEST_DIR="/home/${SSH_USER}/Desktop/si"
+SSH_USER="daq"
+SSH_SERVER="daq.local"
+DEST_DIR="/home/${SSH_USER}/Desktop/daq"
 
 # Folders to copy
-FOLDER1="frontend"
-FOLDER2="database"
-FOLDER3="hardware"
-FOLDER4="backend"
+FOLDER1="daq"
 
-ADDITIONAL_FILES=("docker-compose.yml")
-
-
-copy_folder() {
-    local folder=$1
-    rsync -av --exclude 'node_modules' --exclude 'venv'  "$folder" "${SSH_USER}@${SSH_SERVER}:${DEST_DIR}"
+# Function to check and create destination directory
+check_and_create_dest_dir() {
+    ssh ${SSH_USER}@${SSH_SERVER} "mkdir -p ${DEST_DIR}"
+    if [ $? -eq 0 ]; then
+        echo "Destination directory ${DEST_DIR} verified/created."
+    else
+        echo "Failed to verify/create destination directory ${DEST_DIR}."
+        exit 1
+    fi
 }
 
+# Function to copy folder
+copy_folder() {
+    local folder=$1
+    echo "Starting to copy folder: $folder"
+    rsync -av --exclude 'node_modules' --exclude 'venv' "$folder" "${SSH_USER}@${SSH_SERVER}:${DEST_DIR}"
+    if [ $? -eq 0 ]; then
+        echo "Successfully copied $folder to ${SSH_USER}@${SSH_SERVER}:${DEST_DIR}"
+    else
+        echo "Failed to copy $folder"
+    fi
+}
 
-ssh "${SSH_USER}@${SSH_SERVER}" "cd ${DEST_DIR} && rm -rf frontend && mkdir frontend"
-# Copy folders
+# Check and create destination directory if necessary
+check_and_create_dest_dir
+
+# Call the function to copy the folder
 copy_folder "$FOLDER1"
-copy_folder "$FOLDER2"
-copy_folder "$FOLDER3"
-copy_folder "$FOLDER4"
-
-
-# Copy additional files
-for file in "${ADDITIONAL_FILES[@]}"; do
-    scp "$file" "${SSH_USER}@${SSH_SERVER}:${DEST_DIR}"
-done
-
-# Run Docker Compose
-
-ssh "${SSH_USER}@${SSH_SERVER}" "cd ${DEST_DIR} && docker-compose up --build"
