@@ -61,6 +61,8 @@ async def get_get_all_measurements():
 
 
 def convert_to_list(data: dict):
+    print(data.keys())
+
     new_data = []
     for i, n in zip(data["time"], range(len(data["time"]))):
         new_data.append(

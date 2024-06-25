@@ -2,7 +2,8 @@ from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Dict
-from read_data_mock import get_data  # Import your actual get_data function
+# from read_data_mock import get_data  # Import your actual get_data function
+from read_data import get_data  # Import your actual get_data function
 
 app = FastAPI()
 
@@ -31,5 +32,5 @@ def read_root():
 @app.post("/sensor_data")
 async def measure_data(params: SensorDataParams):
     samples_per_channel = int(params.duration * params.rate)
-    data = get_data(params.rate, samples_per_channel, [params.channel_ir, params.channel_mic], ["mic", "ir"])
+    data = get_data(params.rate, samples_per_channel, [params.channel_ir, params.channel_mic], ["MIC", "IR"])
     return data

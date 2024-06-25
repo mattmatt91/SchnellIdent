@@ -1,8 +1,9 @@
 import requests
+PORT_DAQ = 8500
+IP_DAQ = "192.168.1.52"
 
 def test_sensor_data_api():
-    url = "http://192.168.1.2:8500/sensor_data"
-    
+    url = f"http://{IP_DAQ}:{PORT_DAQ}/sensor_data"
     # Define the parameters for the request
     params = {
         "rate": 10000,

@@ -2,8 +2,10 @@ import pandas as pd
 import random
 import requests
 
+IP_DAQ = "192.168.1.52"
+PORT_DAQ = 8500
 def command_daq(daq_arguments: dict):
-    url = "http://192.168.1.2:8500/sensor_data"
+    url = f"http://{IP_DAQ}:{PORT_DAQ}/sensor_data"
     response = requests.post(url, json=daq_arguments)
     if response.status_code == 200:
         data = response.json()
