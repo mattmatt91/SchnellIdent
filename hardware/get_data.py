@@ -1,9 +1,11 @@
 import pandas as pd
 import random
 import requests
+import os
 
-IP_DAQ = "192.168.1.52"
-PORT_DAQ = 8500
+IP_DAQ = os.getenv("IP_DAQ", "default_ip")
+PORT_DAQ = os.getenv("PORT_DAQ", 8500)
+
 def command_daq(daq_arguments: dict):
     url = f"http://{IP_DAQ}:{PORT_DAQ}/sensor_data"
     response = requests.post(url, json=daq_arguments)

@@ -18,6 +18,9 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3010:3010"
+    environment:
+      - IP_DAQ=${IP_DAQ}
+      - PORT_DAQ=${PORT_DAQ}
     restart: always
       
   database:
