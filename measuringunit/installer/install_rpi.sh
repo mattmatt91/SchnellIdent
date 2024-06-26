@@ -2,6 +2,7 @@
 
 HOST_IP="daq.local"
 HOST_NAME="daq"
+DEST_DIR="home/daq/Desktop/daq"
 # rm hostname
 ssh-keygen -R $HOST_IP
 
@@ -14,13 +15,14 @@ ssh-copy-id $HOST_NAME@$HOST_IP
 # SSH into the remote host
 ssh $HOST_NAME@$HOST_IP 'exit'
 
-# Transfer the Docker installation script to the remote host
-scp install_docker_compose.sh $HOST_NAME@$HOST_IP:~/
+# Install DAQ
+scp install_daq.sh $HOST_NAME@$HOST_IP:~/
+ssh $HOST_NAME@$HOST_IP 'bash ~/install_daq.sh'
 
-# Execute the Docker installation script on the remote host
-ssh $HOST_NAME@$HOST_IP 'bash ~/install_docker_compose.sh'
+# Create venv
+scp create_venv.sh $HOST_NAME@$HOST_IP:~/
+ssh $HOST_NAME@$HOST_IP 'bash ~/create_venv.sh'
 
-#bash ../deploy_to_rp
-
-
-# install node and react stuff, npm then nom install and npm start for debugging frontend
+# create auto start service
+scp create_service.sh $HOST_NAME@$HOST_IP:~/
+ssh $HOST_NAME@$HOST_IP 'bash ~/create_service.sh'

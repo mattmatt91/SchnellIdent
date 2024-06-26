@@ -1,0 +1,18 @@
+[Unit]
+Description=FastAPI server
+After=network.target
+
+[Service]
+User=daq
+WorkingDirectory=/home/daq/Desktop/daq
+ExecStart=/bin/bash -c 'source /home/daq/Desktop/daq/venv/bin/activate && exec uvicorn main:app --host 0.0.0.0 --port 8500 --reload'
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+
+
+# sudo nano /etc/systemd/system/fastapi.service
+# sudo systemctl daemon-reload
+# sudo systemctl restart fastapi.service
+# sudo systemctl status fastapi.service
