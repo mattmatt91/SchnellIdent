@@ -1,14 +1,16 @@
+version: '3.8'
 
 services:
-
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
     ports:
       - "4000:4000"
-    # depends_on:
-    #   - hardware
+    env_file:
+      - .env  # This will be the .env file you copy in your deployment script
+    volumes:
+      - ${DATA_PATH}:/data
     restart: always
 
   hardware:
@@ -20,9 +22,8 @@ services:
       - "3010:3010"
     environment:
       - IP_DAQ=${IP_DAQ}
-      - PORT_DAQ=${PORT_DAQ}
     restart: always
-      
+
   database:
     build:
       context: ./database
@@ -39,8 +40,6 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
-    # depends_on:
-    #   - backend
     restart: always
 
 networks:

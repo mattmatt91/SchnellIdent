@@ -3,7 +3,8 @@ import random
 import requests
 import os
 
-IP_DAQ ="192.168.1.52" # os.getenv("IP_DAQ", "default_ip")
+
+IP_DAQ=os.getenv("IP_DAQ", "default_ip")
 PORT_DAQ = os.getenv("PORT_DAQ", 8500)
 
 def command_daq(daq_arguments: dict):

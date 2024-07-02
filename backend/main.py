@@ -9,7 +9,8 @@ import pandas as pd
 import json
 from io import BytesIO
 import zipfile
-
+import os
+from datetime import datetime
 
 
 app = FastAPI()
@@ -21,6 +22,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 @app.get("/")
 def read_root():
@@ -42,7 +44,7 @@ async def measure_data():
     url = f'http://hardware:3010/start'
     data = requests.post(url=url, json=params).json()
     params = eval_measurement(data, params)
-    url = f"http://database:3040/add_dataset/{id}" 
+    url = f"http://database:3040/add_dataset/{id}"
     requests.post(url, json={"data": data, "info": params})
     data = convert_to_list(data)
     return {"data": data, "params": params}
@@ -66,11 +68,10 @@ async def get_get_all_measurements():
         return response.json()["dataset_ids"]
 
 
-
 @app.get("/download_measurement/{measurement_id}")
 async def download_measurement(measurement_id: str):
     data = await get_data(measurement_id)
-    measurement_data = data["data"] 
+    measurement_data = data["data"]
     measurement_info = data["params"]
     # if not measurement_data or not measurement_info:
     #     raise HTTPException(status_code=404, detail="Measurement not found")
@@ -80,7 +81,7 @@ async def download_measurement(measurement_id: str):
     csv_buffer = BytesIO()
     df.to_csv(csv_buffer, index=False)
     csv_buffer.seek(0)
-    
+
     # Create JSON content in memory
     json_buffer = BytesIO()
     json_buffer.write(json.dumps(measurement_info).encode('utf-8'))
@@ -96,15 +97,17 @@ async def download_measurement(measurement_id: str):
     return StreamingResponse(
         zip_buffer,
         media_type='application/zip',
-        headers={'Content-Disposition': f'attachment; filename=measurement_{measurement_id}.zip'}
+        headers={
+            'Content-Disposition': f'attachment; filename=measurement_{measurement_id}.zip'}
     )
 
 
 @app.get("/download_all_measurements")
 async def download_all_measurements():
     all_ids = await get_get_all_measurements()
-    
+
     zip_buffer = BytesIO()
+
     with zipfile.ZipFile(zip_buffer, 'w') as zip_file:
         for measurement_id in all_ids:
             data = await get_data(measurement_id)
@@ -116,24 +119,95 @@ async def download_all_measurements():
             csv_buffer = BytesIO()
             df.to_csv(csv_buffer, index=False)
             csv_buffer.seek(0)
-            
+
             # Create JSON content in memory
             json_buffer = BytesIO()
             json_buffer.write(json.dumps(measurement_info).encode('utf-8'))
             json_buffer.seek(0)
-            
+
             # Create a folder for each measurement and add files
             folder_name = f"measurement_{measurement_id}"
             zip_file.writestr(f"{folder_name}/data.csv", csv_buffer.getvalue())
-            zip_file.writestr(f"{folder_name}/info.json", json_buffer.getvalue())
-    
+            zip_file.writestr(f"{folder_name}/info.json",
+                              json_buffer.getvalue())
+
     zip_buffer.seek(0)
 
     return StreamingResponse(
         zip_buffer,
         media_type='application/zip',
         headers={'Content-Disposition': 'attachment; filename=all_measurements.zip'}
-    )                           
+    )
+
+
+
+@app.post("/save_measurement/{measurement_id}")
+async def save_measurement(measurement_id: str):
+    data = await get_data(measurement_id)
+    measurement_data = data["data"]
+    measurement_info = data["params"]
+
+    # Get the current date and time
+    now = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    save_path = f"/data/measurement_{measurement_id}_{now}"
+    os.makedirs(save_path, exist_ok=True)
+
+    # Save CSV file
+    df = pd.DataFrame(measurement_data)
+    csv_path = os.path.join(save_path, "data.csv")
+    df.to_csv(csv_path, index=False)
+
+    # Save JSON file
+    json_path = os.path.join(save_path, "info.json")
+    with open(json_path, "w") as json_file:
+        json.dump(measurement_info, json_file)
+
+    return {"message": f"Measurement {measurement_id} saved successfully at {save_path}"}
+
+@app.post("/save_all_measurements")
+async def save_all_measurements():
+    all_ids = await get_get_all_measurements()
+    now = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    base_save_path = f"/data/all_measurements_{now}"
+    os.makedirs(base_save_path, exist_ok=True)
+
+    for measurement_id in all_ids:
+        data = await get_data(measurement_id)
+        measurement_data = data["data"]
+        measurement_info = data["params"]
+
+        # Create a folder for each measurement
+        save_path = os.path.join(base_save_path, f"measurement_{measurement_id}")
+        os.makedirs(save_path, exist_ok=True)
+
+        # Save CSV file
+        df = pd.DataFrame(measurement_data)
+        csv_path = os.path.join(save_path, "data.csv")
+        df.to_csv(csv_path, index=False)
+
+        # Save JSON file
+        json_path = os.path.join(save_path, "info.json")
+        with open(json_path, "w") as json_file:
+            json.dump(measurement_info, json_file)
+
+    return {"message": f"All measurements saved successfully in {base_save_path}"}
+
+
+
+@app.get("/delete_measurement/{id}")
+async def del_data(id: str):
+    url = f"http://database:3040/delete_dataset/{id}"
+    response = requests.get(url)
+    if response.status_code == 200:
+        return {"info": "Measurement deleted"}
+
+
+@app.get("/delete_all_measurement/{id}")
+async def del_all_data(id: str):
+    url = f"http://database:3040d/delete_all_datasets"
+    response = requests.get(url)
+    if response.status_code == 200:
+        return {"info": "Measurement deleted"}
 
 
 def convert_to_list(data: dict):

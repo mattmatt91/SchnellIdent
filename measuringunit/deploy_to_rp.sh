@@ -37,4 +37,4 @@ check_and_create_dest_dir
 # Call the function to copy the folder
 copy_folder "$FOLDER1"
 
-# ssh ${SSH_USER}@${SSH_SERVER}  "cd $DEST_DIR; source testdaq/venv/bin/activate; cd daq; uvicorn main:app --host 0.0.0.0 --port 8500 --reload"
+ssh ${SSH_USER}@${SSH_SERVER}  "cd $DEST_DIR; source testdaq/venv/bin/activate; cd daq; uvicorn main:app --host 0.0.0.0 --port 8500 --reload"

@@ -1,5 +1,5 @@
 # Use an official Python runtime as the base image
-FROM arm64v8/python:3.9-slim
+FROM python:3.9-slim-buster
 
 # Set the working directory in the container
 WORKDIR /app
