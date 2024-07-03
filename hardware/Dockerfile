@@ -1,5 +1,5 @@
 # Use the official Python image as a base image
-FROM arm64v8/python:3.9-slim
+FROM python:3.9-slim-buster
 
 # Install system dependencies and Git
 #RUN apt update && apt install -y git

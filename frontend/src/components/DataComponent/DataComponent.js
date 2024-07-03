@@ -48,7 +48,7 @@ function PlotComponent() {
       return;
     }
     try {
-      await API.downloadMeasurementById(selectedId);
+      await API.saveMeasurement(selectedId);
     } catch (error) {
       console.error('Error downloading measurement:', error);
     }
@@ -80,16 +80,29 @@ function PlotComponent() {
         <button className='button' onClick={fetchData}>Fetch Data</button>
       </div>
       <div className="data-display">
-        <DataDisplayComponent 
-          data={data} 
-          params={params} 
-          selectedId={selectedId} 
-          onDownloadMeasurement={handleDownloadMeasurement} 
-          onDeleteMeasurement={handleDeleteMeasurement} 
+        <DataDisplayComponent
+          data={data}
+          params={params}
+          selectedId={selectedId}
+
         />
       </div>
       <div className="buttonbar-data-component">
-        <button className='button' onClick={API.downloadAllMeasurements}>Download all Measurements</button>
+        <button
+          className='button'
+          onClick={handleDownloadMeasurement}
+        >
+          Download this Measurement
+        </button>
+        <button
+          className='button'
+          onClick={handleDeleteMeasurement}
+        >
+          Delete this Measurement
+        </button>
+      </div>
+      <div className="buttonbar-data-component">
+        <button className='button' onClick={API.saveAllMeasurements}>Download all Measurements</button>
       </div>
     </>
   );

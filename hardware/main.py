@@ -3,14 +3,13 @@ from pydantic import BaseModel
 from datetime import datetime, timedelta
 import random
 from time import sleep
-# from get_data import command_daq 
-from get_data import command_daq
+from get_data import command_daq 
+# from get_data import command_daq
 from fastapi.middleware.cors import CORSMiddleware
 import platform
 import math
 import pandas as pd
 
-local_ip_address ="localhost"
 
 app = FastAPI()
 

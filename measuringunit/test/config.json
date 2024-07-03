@@ -1,0 +1,14 @@
+{
+    "HOST": {
+        "HOST_DAQ": "daq.local",
+        "PORT_DAQ": 8500
+    },
+    "MEASUREMENT": {
+        "rate": 10,
+        "duration": 2.0,
+        "power": 0.5,
+        "duration_heater": 0.5,
+        "channel_ir": 0,
+        "channel_mic": 1
+    }
+}

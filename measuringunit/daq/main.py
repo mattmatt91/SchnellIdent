@@ -2,8 +2,8 @@ from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Dict
-# from read_data_mock import get_data  # Import your actual get_data function
-from read_data import get_data  # Import your actual get_data function
+from read_data_mock import get_data  # Import your actual get_data function
+# from read_data import get_data  # Import your actual get_data function
 
 app = FastAPI()
 

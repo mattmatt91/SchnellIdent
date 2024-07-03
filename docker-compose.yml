@@ -20,8 +20,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3010:3010"
-    environment:
-      - IP_DAQ=${IP_DAQ}
+    env_file:
+      - .env
     restart: always
 
   database:
@@ -38,6 +38,8 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+    env_file:
+      - .env  # Correctly include the env_file section
     ports:
       - "3000:3000"
     restart: always

@@ -1,5 +1,9 @@
 
-const localIpAddress = "localhost";
+// Access the environment variable
+const localIpAddress = process.env.REACT_APP_IP_BACKEND;
+
+console.log(`Local IP Address: ${localIpAddress}`);
+
 
 
 export async function getMeasurement() {
@@ -89,4 +93,34 @@ export async function downloadAllMeasurements() {
   document.body.appendChild(a);
   a.click();
   window.URL.revokeObjectURL(url);
+}
+
+export async function saveMeasurement(measurementId) {
+  const response = await fetch(`http://${localIpAddress}:4000/save_measurement/${measurementId}`, { 
+    method: 'POST', 
+    mode: 'cors'
+  });
+
+  if (!response.ok) {
+    throw new Error('Network response was not ok');
+  }
+
+  // Handle the response if needed (e.g., show a notification)
+  const result = await response.json();
+  console.log('Measurement saved:', result);
+}
+
+export async function saveAllMeasurements() {
+  const response = await fetch(`http://${localIpAddress}:4000/save_all_measurements`, { 
+    method: 'POST', 
+    mode: 'cors'
+  });
+
+  if (!response.ok) {
+    throw new Error('Network response was not ok');
+  }
+
+  // Handle the response if needed (e.g., show a notification)
+  const result = await response.json();
+  console.log('All measurements saved:', result);
 }

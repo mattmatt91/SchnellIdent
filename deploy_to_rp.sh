@@ -10,9 +10,10 @@ FOLDER1="frontend"
 FOLDER2="database"
 FOLDER3="hardware"
 FOLDER4="backend"
+FOLDER4="env_rpi"
 
 # Files to copy
-ADDITIONAL_FILES=("docker-compose.yml" ".env.rpi")
+ADDITIONAL_FILES=("docker-compose.yml")
 
 # Function to copy folders
 copy_folder() {
@@ -32,7 +33,7 @@ for file in "${ADDITIONAL_FILES[@]}"; do
 done
 
 # Rename .env.rpi to .env on the Raspberry Pi
-ssh "${SSH_USER}@${SSH_SERVER}" "mv ${DEST_DIR}/.env.rpi ${DEST_DIR}/.env"
+ssh "${SSH_USER}@${SSH_SERVER}" "cp ${DEST_DIR}/env_rpi/.env ${DEST_DIR}/.env"
 
 # Run Docker Compose
-ssh "${SSH_USER}@${SSH_SERVER}" "cd ${DEST_DIR} && docker-compose up --build hardware"
+ssh "${SSH_USER}@${SSH_SERVER}" "cd ${DEST_DIR} && docker-compose up "
