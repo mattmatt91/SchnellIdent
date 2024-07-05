@@ -1,6 +1,6 @@
 {
     "HOST": {
-        "HOST_DAQ": "daq.local",
+        "HOST_DAQ": "localhost",
         "PORT_DAQ": 8500
     },
     "MEASUREMENT": {

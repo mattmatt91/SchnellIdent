@@ -21,7 +21,7 @@ def test_sensor_data_api():
 
     # Send a POST request with the parameters as JSON
     response = requests.post(url, json=params_measurement)
-    print(response.json())
+    # print(response.json())
     # Print the response from the server
     print("Status Code:", response.status_code)
     return response.json()
@@ -36,7 +36,7 @@ def plot_data(data: pd.DataFrame, subfolder: str):
 
 
 def save_data(data):
-    print(data)
+    # print(data)
     df = pd.DataFrame(data)
     df["time"]= [(1/params_measurement["rate"])*i for i in df.index]
     # Ensure the data subfolder exists and create a timestamped subfolder

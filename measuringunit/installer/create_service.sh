@@ -1,13 +1,26 @@
 #!/bin/bash
 
+# Exit immediately if a command exits with a non-zero status
+set -e
+
 # Define variables
 USER="daq"
-APP_BASE_DIR="/home/daq/Desktop/daq"
-APP_DIR="myfastapiapp"
+APP_BASE_DIR="/home/daq/Desktop/daq/myfastapiapp"
 VENV_DIR="venv"
 SERVICE_FILE="/etc/systemd/system/fastapi.service"
 APP_ENTRY="main:app"
 PORT="8500"
+
+# Ensure the application directory and virtual environment exist
+if [ ! -d "$APP_BASE_DIR" ]; then
+    echo "Error: Application directory $APP_BASE_DIR does not exist."
+    exit 1
+fi
+
+if [ ! -d "$APP_BASE_DIR/$VENV_DIR" ]; then
+    echo "Error: Virtual environment directory $APP_BASE_DIR/$VENV_DIR does not exist."
+    exit 1
+fi
 
 # Create the service file with the variables
 sudo bash -c "cat > $SERVICE_FILE" <<EOF
