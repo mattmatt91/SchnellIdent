@@ -1,13 +1,14 @@
 {
     "HOST": {
-        "HOST_DAQ": "localhost",
+        "HOST_DAQ": "192.168.1.100",
         "PORT_DAQ": 8500
     },
     "MEASUREMENT": {
         "rate": 10,
-        "duration": 2.0,
+        "duration": 5.0,
         "power": 0.5,
-        "duration_heater": 0.5,
+        "offset_heater": 0.5,
+        "duration_heater": 1.5,
         "channel_ir": 0,
         "channel_mic": 1
     }

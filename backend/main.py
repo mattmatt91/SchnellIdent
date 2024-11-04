@@ -40,9 +40,12 @@ def get_random_data():
 async def measure_data():
     id = get_current_datetime_string()
     params = {"duration": 3, "rate": 1000,
-              "power": 5, "duration_heater": 0.1, "id": id}
+              "power": 5,"offset_heater":0.5, "duration_heater": 1, "id": id}
+    
     url = f'http://hardware:3010/start'
+    print(params)
     data = requests.post(url=url, json=params).json()
+    print("BACKEND", type(data))
     params = eval_measurement(data, params)
     url = f"http://database:3040/add_dataset/{id}"
     requests.post(url, json={"data": data, "info": params})

@@ -22,6 +22,7 @@ def create_if_not_exists():
 
 @app.post("/add_dataset/{dataset_id}")
 def add_dataset_route(dataset_id: str, data: dict, info: dict):
+    print(info)
     database.add_dataset(dataset_id, data, info)
     return {"message": "Dataset added successfully"}
 

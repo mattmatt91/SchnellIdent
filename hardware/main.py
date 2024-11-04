@@ -26,7 +26,8 @@ class MeasurementData(BaseModel):
     duration: int
     rate: int
     power: int
-    duration_heater: int
+    offset_heater: float
+    duration_heater: float
     id: str
 
 
@@ -34,18 +35,20 @@ class MeasurementData(BaseModel):
 async def start(data: MeasurementData):
     rate = int(data.rate)
     duration = int(data.duration)
-    power= data.power
-    duration_heater = data.duration_heater
+    power= float(data.power)
+    offset_heater = float(data.offset_heater)
+    duration_heater = float(data.duration_heater)
     channel_mic = 1
     channel_ir = 2
     daq_arguments = {"rate":int(rate), 
                      "duration":float(duration),
                        "power":float(power),
                          "duration_heater":float(duration_heater),
+                         "offset_heater":float(offset_heater),
                            "channel_ir":int(channel_ir),
                              "channel_mic":int(channel_mic)}
     data = command_daq(daq_arguments)
-
+  
     return data
 
 

@@ -1,13 +1,10 @@
 #!/bin/bash
 
 # Check if an argument is provided
-if [ -z "$1" ]; then
-    echo "Usage: $0 <server_address>"
-    exit 1
-fi
+
 
 # Store the server address from the command line argument
-server_address="$1"
+server_address="si.local"
 echo "Sending to: $server_address"
 
 # Define the server user

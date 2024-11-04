@@ -1,18 +1,25 @@
 
 // Access the environment variable
-const localIpAddress = process.env.REACT_APP_IP_BACKEND;
+const localIpAddress = "localhost" //process.env.REACT_APP_IP_BACKEND;
 
-console.log(`Local IP Address: ${localIpAddress}`);
+// console.log(`Local IP Address: ${localIpAddress}`);
 
 
 
 export async function getMeasurement() {
+  console.log("TEST1")
   const response = await fetch(`http://${localIpAddress}:4000/measurement`, { mode: 'cors' });
   if (!response.ok) {
     throw new Error('Network response was not ok');
   }
+
+
+
   return await response.json();
 }
+
+
+
 
 export async function getAllIds() {
 

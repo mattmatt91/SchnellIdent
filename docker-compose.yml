@@ -5,12 +5,14 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    ports:
-      - "4000:4000"
     env_file:
       - .env  # This will be the .env file you copy in your deployment script
+    ports:
+      - "4000:4000"
     volumes:
       - ${DATA_PATH}:/data
+    networks:
+      - app-network
     restart: always
 
   hardware:
@@ -18,30 +20,44 @@ services:
     build:
       context: ./hardware
       dockerfile: Dockerfile
+      args:
+        REACT_APP_IP_BACKEND: ${REACT_APP_IP_BACKEND}
+        REACT_APP_IP_DAQ: ${REACT_APP_IP_DAQ}
+        REACT_APP_PORT_DAQ: ${REACT_APP_PORT_DAQ}
+    env_file:
+      - .env 
     ports:
       - "3010:3010"
-    env_file:
-      - .env
+    networks:
+      - app-network
     restart: always
 
   database:
     build:
       context: ./database
       dockerfile: Dockerfile
+    env_file:
+      - .env  # Correctly include the env_file section
     ports:
       - "3040:3040"
     volumes:
       - ./data:/app/data
+    networks:
+      - app-network
     restart: always
 
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      args:
+        REACT_APP_IP_BACKEND: ${REACT_APP_IP_BACKEND}
     env_file:
       - .env  # Correctly include the env_file section
     ports:
       - "3000:3000"
+    networks:
+      - app-network
     restart: always
 
 networks:

@@ -24,6 +24,22 @@ html, body, #root {
   width: auto; /* Maintain aspect ratio */
 }
 
+
+.video-container {
+  margin: 20px; /* Adds 20px space on all sides */
+  padding: 10px; /* Adds padding inside the container */
+  background-color: #222; /* Optional: Adds a background color for contrast */
+  border-radius: 8px; /* Optional: Adds rounded corners */
+}
+
+.video-container video {
+  display: block;
+  width: 100%; /* Ensures the video fits within the container */
+  border-radius: 5px; /* Optional: Adds rounded corners to the video */
+}
+
+
+
 /* Main Content Styles */
 .main {
   position: absolute;

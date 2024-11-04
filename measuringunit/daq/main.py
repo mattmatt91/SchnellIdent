@@ -4,12 +4,13 @@ from pydantic import BaseModel
 from typing import Dict
 import os
 import asyncio
+from read_data import get_data  # Import your actual get_data function
 
-# Conditionally import the get_data function
-if os.getenv("RUNNING_LOCALLY"):
-    from read_data_mock import get_data
-else:
-    from read_data import get_data  # Import your actual get_data function
+# Import GPIO library for controlling the pins
+try:
+    import RPi.GPIO as GPIO
+except ImportError:
+    GPIO = None  # Handle the case when running locally without GPIO
 
 app = FastAPI()
 
@@ -27,30 +28,50 @@ class SensorDataParams(BaseModel):
     rate: int = 10000
     duration: float = 2.0
     power: float = 0.5
-    duration_heater: float = 0.5
+    duration_heater: float = 1
+    offset_heater: float = 0.5
     channel_ir: int = 0
     channel_mic: int = 1
+
+# Set up the GPIO pin for the heater control (e.g., GPIO17)
+HEATER_PIN = 17
+
+if GPIO:
+    GPIO.setmode(GPIO.BCM)  # Use BCM numbering
+    GPIO.setup(HEATER_PIN, GPIO.OUT)  # Set up the pin as an output
 
 @app.get("/")
 def read_root():
     return "test from backend"
 
-async def toggle_heater(duration_heater: float):
-    await asyncio.sleep(0.5)  # Wait for 0.5 seconds before turning the heater on
-    print("HEATER ON")
+async def toggle_heater(duration_heater: float, offset_heater: float):
+    await asyncio.sleep(offset_heater)  # Wait before turning the heater on
+    if GPIO:
+        GPIO.output(HEATER_PIN, GPIO.HIGH)  # Set the pin high (turn the heater on)
+        print("HEATER ON")
+    
     await asyncio.sleep(duration_heater)  # Keep the heater on for the specified duration
-    print("HEATER OFF")
+    
+    if GPIO:
+        GPIO.output(HEATER_PIN, GPIO.LOW)  # Set the pin low (turn the heater off)
+        print("HEATER OFF")
 
 @app.post("/sensor_data")
 async def measure_data(params: SensorDataParams):
-    # Start the heater toggle task
-    heater_task = asyncio.create_task(toggle_heater(params.duration_heater))
+    # Start the heater toggle task asynchronously
+    print(params)
+    heater_task = asyncio.create_task(toggle_heater(params.duration_heater, params.offset_heater))
     
-    # Fetch the data
+    # Run get_data in a separate thread to allow the event loop to handle other tasks
     samples_per_channel = int(params.duration * params.rate)
-    data = get_data(params.rate, samples_per_channel, [params.channel_ir, params.channel_mic], ["MIC", "IR"])
+    data = await asyncio.to_thread(get_data, params.rate, samples_per_channel, [params.channel_ir, params.channel_mic], ["MIC", "IR"])
     
     # Wait for the heater task to complete
     await heater_task
     
     return data
+
+# Ensure GPIO is cleaned up on exit if applicable
+if GPIO:
+    import atexit
+    atexit.register(GPIO.cleanup)

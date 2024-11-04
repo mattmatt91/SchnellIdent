@@ -20,6 +20,7 @@ def test_sensor_data_api():
                     }:{params_host_daq['PORT_DAQ']}/sensor_data"
 
     # Send a POST request with the parameters as JSON
+    print(params_measurement)
     response = requests.post(url, json=params_measurement)
     # print(response.json())
     # Print the response from the server
@@ -55,5 +56,6 @@ def save_data(data):
 
 if __name__ == "__main__":
     response_data = test_sensor_data_api()
-    data = save_data(response_data)
+    print(response_data)
+    # data = save_data(response_data)
 

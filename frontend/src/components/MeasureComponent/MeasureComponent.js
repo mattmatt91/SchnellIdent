@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { ClipLoader } from 'react-spinners';
 import './MeasureComponent.css';
-import DataDisplayComponent from '..//DataDisplayComponent/DataDisplayComponent';
-import * as API from '../../service/api'
-
+import DataDisplayComponent from '../DataDisplayComponent/DataDisplayComponent';
+import * as API from '../../service/api';
+import VideoPlayerComponent from '../VideoPlayerComponent/VideoPlayerComponent'; // Import the new component
 
 function MeasureComponent() {
   const [loading, setLoading] = useState(false);
@@ -26,7 +26,7 @@ function MeasureComponent() {
       console.error('Error:', error);
       setLoading(false);
     }
-  }
+  };
 
   return (
     <div className='measure'>
@@ -46,13 +46,15 @@ function MeasureComponent() {
           </div>
         </div>
       ) : (
-        <button className="button" onClick={handleRequest}>
-          Start Measurement
-        </button>
+        <div>
+          <button className="button" onClick={handleRequest}>
+            Start Measurement
+          </button>
+          <VideoPlayerComponent /> 
+        </div>
       )}
     </div>
   );
-  
 }
 
 export default MeasureComponent;

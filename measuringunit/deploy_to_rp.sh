@@ -37,4 +37,25 @@ check_and_create_dest_dir
 # Call the function to copy the folder
 copy_folder "$FOLDER1"
 
-ssh ${SSH_USER}@${SSH_SERVER}  "cd $DEST_DIR; source testdaq/venv/bin/activate; cd daq; uvicorn main:app --host 0.0.0.0 --port 8500 --reload"
+# ssh ${SSH_USER}@${SSH_SERVER}  "cd $DEST_DIR; source testdaq/venv/bin/activate; cd daq; uvicorn main:app --host 0.0.0.0 --port 8200 --reload"
+# ssh ${SSH_USER}@${SSH_SERVER}  "cd $DEST_DIR; source testdaq/venv/bin/activate; cd daq; uvicorn main:app --host 0.0.0.0 --port 8500 --reload"
+
+
+
+
+
+# Function to kill any running uvicorn server
+stop_uvicorn_server() {
+    ssh ${SSH_USER}@${SSH_SERVER} "pkill -f 'uvicorn main:app'"
+    if [ $? -eq 0 ]; then
+        echo "Uvicorn server stopped successfully."
+    else
+        echo "No running Uvicorn server found or failed to stop."
+    fi
+}
+
+# Stop any running server before starting a new one
+stop_uvicorn_server
+
+# Start the server
+ ssh ${SSH_USER}@${SSH_SERVER}  "cd $DEST_DIR; source testdaq/venv/bin/activate; cd daq; uvicorn main:app --host 0.0.0.0 --port 8500 --reload"

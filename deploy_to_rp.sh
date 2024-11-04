@@ -10,7 +10,7 @@ FOLDER1="frontend"
 FOLDER2="database"
 FOLDER3="hardware"
 FOLDER4="backend"
-FOLDER4="env_rpi"
+FOLDER5="env_rpi"
 
 # Files to copy
 ADDITIONAL_FILES=("docker-compose.yml")
@@ -26,6 +26,7 @@ copy_folder "$FOLDER1"
 copy_folder "$FOLDER2"
 copy_folder "$FOLDER3"
 copy_folder "$FOLDER4"
+copy_folder "$FOLDER5"
 
 # Copy additional files
 for file in "${ADDITIONAL_FILES[@]}"; do
@@ -36,4 +37,4 @@ done
 ssh "${SSH_USER}@${SSH_SERVER}" "cp ${DEST_DIR}/env_rpi/.env ${DEST_DIR}/.env"
 
 # Run Docker Compose
-ssh "${SSH_USER}@${SSH_SERVER}" "cd ${DEST_DIR} && docker-compose up "
+ssh "${SSH_USER}@${SSH_SERVER}" "cd ${DEST_DIR} && docker-compose up --build hardware"
