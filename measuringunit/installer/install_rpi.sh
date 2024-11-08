@@ -31,6 +31,23 @@ else
     exit 1
 fi
 
+
+
+
+# set static ip and install requirements
+scp set_static_ip.sh $HOST_NAME@$HOST_IP:~/
+ssh $HOST_NAME@$HOST_IP 'sudo apt update'
+ssh $HOST_NAME@$HOST_IP 'sudo apt install -y dhcpcd5' 
+ssh $HOST_NAME@$HOST_IP 'sudo apt update --fix-missing'
+ssh $HOST_NAME@$HOST_IP 'sudo apt install -y dhcpcd5'
+ssh $HOST_NAME@$HOST_IP 'sudo systemctl enable dhcpcd '
+ssh $HOST_NAME@$HOST_IP 'sudo systemctl start dhcpcd'
+ssh $HOST_NAME@$HOST_IP 'chmod +x ~/set_static_ip.sh'
+ssh $HOST_NAME@$HOST_IP 'bash ~/set_static_ip.sh'
+ssh $HOST_NAME@$HOST_IP 'sudo systemctl restart dhcpcd'
+
+
+
 # Create virtual environment
 scp create_venv.sh "$HOST_NAME@$HOST_IP:~/"
 if ssh "$HOST_NAME@$HOST_IP" 'bash ~/create_venv.sh'; then

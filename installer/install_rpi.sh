@@ -21,24 +21,27 @@ HOST_NAME="si"
 # ssh $HOST_NAME@$HOST_IP 'bash ~/install_docker_compose.sh'
 
 
-scp set_static_ip.sh $HOST_NAME@$HOST_IP:~/
 
 
 # set static ip and install requirements
+scp set_static_ip.sh $HOST_NAME@$HOST_IP:~/
 ssh $HOST_NAME@$HOST_IP 'sudo apt update'
 ssh $HOST_NAME@$HOST_IP 'sudo apt install -y dhcpcd5' 
 ssh $HOST_NAME@$HOST_IP 'sudo apt update --fix-missing'
 ssh $HOST_NAME@$HOST_IP 'sudo apt install -y dhcpcd5'
 ssh $HOST_NAME@$HOST_IP 'sudo systemctl enable dhcpcd '
-
 ssh $HOST_NAME@$HOST_IP 'sudo systemctl start dhcpcd'
-
 ssh $HOST_NAME@$HOST_IP 'chmod +x ~/set_static_ip.sh'
-
 ssh $HOST_NAME@$HOST_IP 'bash ~/set_static_ip.sh'
- 
 ssh $HOST_NAME@$HOST_IP 'sudo systemctl restart dhcpcd'
 
 
-# bash ../deploy_to_rp
+
+
+#install display
+scp config_display.sh $HOST_NAME@$HOST_IP:~/
+ssh $HOST_NAME@$HOST_IP 'chmod +x ~/config_display.sh'
+ssh $HOST_NAME@$HOST_IP 'bash ~/config_display.sh'
+
+bash ../deploy_to_rpi.sh
 
