@@ -8,8 +8,7 @@ sudo apt-get install -y xserver-xorg-input-evdev
 
 
 sudo nano /boot/firmware/config.txt 
-# append:
-pi@raspberrypi ~ $ sudo nano /boot/config.txt
+
  
 #LCD Display HDMI Touchscreen Waveshare 7inch 1024×600
 dtparam=i2c_arm=on

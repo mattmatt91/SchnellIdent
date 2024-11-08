@@ -4,7 +4,7 @@ import requests
 import os
 
 
-REACT_APP_IP_DAQ= "daq.local" # os.getenv("REACT_APP_IP_DAQ", "192.168.1.52")
+REACT_APP_IP_DAQ= "192.168.2.100" # os.getenv("REACT_APP_IP_DAQ", "192.168.1.52")
 REACT_APP_PORT_DAQ = 8500 # os.getenv("REACT_APP_PORT_DAQ", 8500)
 
 def command_daq(daq_arguments: dict):

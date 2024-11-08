@@ -1,7 +1,8 @@
 {
     "HOST": {
-        "HOST_DAQ": "192.168.1.100",
-        "PORT_DAQ": 8500
+        "HOST_DAQ": "192.168.2.100",
+        "PORT_DAQ": 8500,
+        "USE_IP": "192.168.2.101"
     },
     "MEASUREMENT": {
         "rate": 10,

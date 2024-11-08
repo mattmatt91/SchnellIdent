@@ -1,5 +1,9 @@
 #!/bin/bash
 
+
+
+# ssh -b 192.168.1.2 daq@daq.local for wlan connection
+
 # SSH details
 SSH_USER="daq"
 SSH_SERVER="daq.local"
