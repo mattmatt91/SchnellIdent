@@ -1,43 +1,42 @@
 #!/bin/bash
 
-# Install necessary packages
-echo "Installing gnome-keyring and gdm3..."
-sudo apt update
-sudo apt install -y gnome-keyring gdm3 x11-xserver-utils
+# Exit immediately if a command exits with a non-zero status
+set -e
 
-# Set up GDM3 as the default display manager
-echo "Configuring GDM3 as the default display manager..."
-sudo dpkg-reconfigure gdm3
+# Install necessary packages if not already installed
+echo "Installing gnome-keyring, gdm3, and x11-xserver-utils..."
+# Uncomment the following lines if the packages are not already installed
+# sudo apt update
+# sudo apt install -y gnome-keyring gdm3 x11-xserver-utils
 
-# Configure display settings for GDM3 (e.g., rotation and resolution)
-echo "Setting up display rotation and resolution..."
-DISPLAY_SCRIPT_PATH="/usr/share/gdm/greeter/autostart/display-settings.sh"
-DISPLAY_DESKTOP_PATH="/usr/share/gdm/greeter/autostart/display-settings.desktop"
+# Configure GDM3 as the default display manager non-interactively
+echo "Setting GDM3 as the default display manager..."
+echo "gdm3 shared/default-x-display-manager select gdm3" | sudo debconf-set-selections
+sudo DEBIAN_FRONTEND=noninteractive dpkg-reconfigure gdm3
 
-# Remove any existing display configuration scripts to avoid duplicates
-sudo rm -f $DISPLAY_SCRIPT_PATH $DISPLAY_DESKTOP_PATH
+# Detect display name using xrandr (only if DISPLAY is accessible)
+export DISPLAY=:0
+DISPLAY_NAME=$(xrandr | grep " connected" | awk '{ print $1 }' || echo "HDMI-1")
+echo "Detected display: $DISPLAY_NAME"
 
-# Create and write the display settings script with desired rotation and resolution
-sudo mkdir -p /usr/share/gdm/greeter/autostart
-sudo bash -c "cat > $DISPLAY_SCRIPT_PATH" <<EOL
-#!/bin/bash
-# Set the desired rotation and resolution
-xrandr --output HDMI-1 --rotate right --mode 1024x600 --rate 60
+# Configure persistent display rotation and resolution in /boot/config.txt
+echo "Setting persistent display rotation and resolution in /boot/config.txt..."
+BOOT_CONFIG="/boot/firmware/config.txt"
+
+# Remove existing display configuration lines
+sudo sed -i '/^hdmi_group/d;/^hdmi_mode/d;/^hdmi_cvt/d;/^display_hdmi_rotate/d' $BOOT_CONFIG
+
+# Add custom display settings to /boot/config.txt
+sudo bash -c "cat >> $BOOT_CONFIG" <<EOL
+
+# Custom display settings
+hdmi_group=2             # Use DMT mode
+hdmi_mode=87             # Enable custom resolution
+hdmi_cvt 1024 600 60 6   # Set resolution to 1024x600 at 60Hz
+display_hdmi_rotate=3    # Rotate display to the left (90° counterclockwise)
 EOL
 
-# Make the display settings script executable
-sudo chmod +x $DISPLAY_SCRIPT_PATH
-
-# Create the .desktop file to autostart the display settings in GDM3
-sudo bash -c "cat > $DISPLAY_DESKTOP_PATH" <<EOL
-[Desktop Entry]
-Type=Application
-Name=Display Settings
-Exec=$DISPLAY_SCRIPT_PATH
-X-GNOME-Autostart-enabled=true
-EOL
-
-# Configure touchscreen calibration for GDM3
+# Configure touchscreen calibration for ADS7846 touchscreen
 echo "Configuring touchscreen calibration..."
 TOUCHSCREEN_CONFIG_PATH="/etc/X11/xorg.conf.d/99-calibration.conf"
 
@@ -56,8 +55,31 @@ Section "InputClass"
 EndSection
 EOL
 
-# Restart GDM3 to apply changes
-echo "Restarting GDM3 to apply display and touchscreen settings..."
-sudo systemctl restart gdm3
 
-echo "Setup complete! GDM3 is now configured with display and touchscreen settings."
+#remove pwd
+sudo passwd -d si
+
+
+# Prompt for a reboot to apply display and touchscreen settings
+echo "Setup complete! Please reboot the system to apply display rotation and touchscreen calibration settings."
+
+
+
+#!/bin/bash
+
+# Define the path to the .xprofile file
+XPROFILE_PATH="$HOME/.xprofile"
+
+# Write the necessary commands to .xprofile
+cat <<EOL > "$XPROFILE_PATH"
+# Rotate the display to the left
+xrandr --output HDMI-1 --rotate left
+
+# Launch Chromium in full-screen mode with the specified URL
+sleep 10
+chromium-browser --start-fullscreen --app=http://localhost:3000 &
+EOL
+
+echo ".xprofile has been set up with display rotation and Chromium launch."
+
+

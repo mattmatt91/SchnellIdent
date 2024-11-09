@@ -3,13 +3,16 @@
 # Exit immediately if a command exits with a non-zero status
 set -e
 
-# Define variables
+# Define variables for FastAPI service
 USER="daq"
-APP_BASE_DIR="/home/daq/Desktop/daq/myfastapiapp"
+APP_BASE_DIR="/home/daq/Desktop/daq"
 VENV_DIR="venv"
 SERVICE_FILE="/etc/systemd/system/fastapi.service"
 APP_ENTRY="main:app"
 PORT="8500"
+
+# Define variables for dhcpcd restart service
+DHCPCD_SERVICE_FILE="/etc/systemd/system/restart-dhcpcd.service"
 
 # Ensure the application directory and virtual environment exist
 if [ ! -d "$APP_BASE_DIR" ]; then
@@ -22,7 +25,7 @@ if [ ! -d "$APP_BASE_DIR/$VENV_DIR" ]; then
     exit 1
 fi
 
-# Create the service file with the variables
+# Create the FastAPI service file
 sudo bash -c "cat > $SERVICE_FILE" <<EOF
 [Unit]
 Description=FastAPI server
@@ -38,14 +41,43 @@ Restart=always
 WantedBy=multi-user.target
 EOF
 
-# Reload systemd to apply the new service
+# Reload systemd to apply the new FastAPI service
 sudo systemctl daemon-reload
 
-# Enable the FastAPI service to start on boot
+# Enable and start the FastAPI service
 sudo systemctl enable fastapi.service
-
-# Start the FastAPI service
 sudo systemctl start fastapi.service
 
 # Check the status of the FastAPI service
 sudo systemctl status fastapi.service
+
+# Create the dhcpcd restart service if it doesn't already exist
+if [ ! -f "$DHCPCD_SERVICE_FILE" ]; then
+    echo "Creating the restart-dhcpcd service file..."
+
+    sudo bash -c "cat > $DHCPCD_SERVICE_FILE" <<EOF
+[Unit]
+Description=Restart dhcpcd at startup
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/bin/systemctl restart dhcpcd
+RemainAfterExit=true
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+    # Reload systemd to recognize the new dhcpcd service
+    sudo systemctl daemon-reload
+
+    # Enable the dhcpcd restart service to run at startup
+    sudo systemctl enable restart-dhcpcd.service
+fi
+
+# Start the dhcpcd restart service immediately (optional)
+sudo systemctl start restart-dhcpcd.service
+
+# Check the status of the dhcpcd restart service
+sudo systemctl status restart-dhcpcd.service
