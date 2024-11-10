@@ -37,4 +37,4 @@ done
 ssh "${SSH_USER}@${SSH_SERVER}" "cp ${DEST_DIR}/env_rpi/.env ${DEST_DIR}/.env"
 
 # Run Docker Compose
-ssh "${SSH_USER}@${SSH_SERVER}" "cd ${DEST_DIR} && docker-compose up --build hardware"
+ssh "${SSH_USER}@${SSH_SERVER}" "cd ${DEST_DIR} && docker-compose up --build backend"
