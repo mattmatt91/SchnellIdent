@@ -17,15 +17,16 @@ services:
 
   hardware:
     privileged: true
+    env_file:
+      - .env 
     build:
       context: ./hardware
       dockerfile: Dockerfile
-      args:
-        REACT_APP_IP_BACKEND: ${REACT_APP_IP_BACKEND}
-        REACT_APP_IP_DAQ: ${REACT_APP_IP_DAQ}
-        REACT_APP_PORT_DAQ: ${REACT_APP_PORT_DAQ}
-    env_file:
-      - .env 
+    environment:
+      - SENSORS_PINS=${SENSORS_PINS}
+      - REACT_APP_IP_BACKEND=${REACT_APP_IP_BACKEND}
+      - REACT_APP_IP_DAQ=${REACT_APP_IP_DAQ}
+      - REACT_APP_PORT_DAQ=${REACT_APP_PORT_DAQ}
     ports:
       - "3010:3010"
     networks:
