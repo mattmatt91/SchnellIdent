@@ -230,5 +230,5 @@ def get_current_datetime_string():
 
 
 def eval_measurement(data: dict, params: dict):
-    params["explosive"] = random.choice([True, False])
+    params["explosive"] = False # random.choice([True, False])
     return params
